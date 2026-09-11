@@ -1,10 +1,10 @@
 # H1 — design-interpretation approvers review the internal contract
-/work/    @avajpcloud-ade/design-reviewers
+/work/    @avajpcloud-ade
 
 # Bicep reviewers (the H5 deploy approval itself lives on the `production` environment)
-/infra/   @avajpcloud-ade/platform-team
+/infra/   @avajpcloud-ade
 
 # Changes to the gate, schemas, agents, and workflows need platform review
-/scripts/ @avajpcloud-ade/platform-team
-/schemas/ @avajpcloud-ade/platform-team
-/.github/ @avajpcloud-ade/platform-team
+/scripts/ @avajpcloud-ade
+/schemas/ @avajpcloud-ade
+/.github/ @avajpcloud-ade
