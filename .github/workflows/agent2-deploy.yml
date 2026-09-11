@@ -1,0 +1,99 @@
+name: agent2-deploy
+
+# H5 → Deploy.
+# 1. plan:   re-run the gate + a fresh what-if against the CURRENT state of Azure.
+# 2. deploy: waits on the `production` environment. Configure "Required reviewers"
+#            on that environment — those reviewers ARE the H5 approvers. They read the
+#            what-if in the plan job's summary, then approve.
+#
+# If you already have a CI/CD pipeline (Azure DevOps, etc.), keep the plan job's
+# logic and put the H5 approval + deploy step in that pipeline instead.
+
+on:
+  push:
+    branches: [main]
+    paths: ['infra/**']
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Project folder under infra/'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: agent2-deploy
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.p.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: p
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$INPUT_PROJECT" ]; then
+            projects=$(jq -c -n --arg p "$INPUT_PROJECT" '[$p]')
+          else
+            projects=$(git diff --name-only "$BEFORE" HEAD \
+              | awk -F/ '$1=="infra" && NF>2 {print $2}' | sort -u \
+              | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          fi
+          echo "projects=$projects" >> "$GITHUB_OUTPUT"
+
+  plan:
+    needs: detect
+    if: needs.detect.outputs.projects != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.detect.outputs.projects) }}
+    env:
+      PROJECT: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install jsonschema
+      - run: python scripts/agent2_gate.py "$PROJECT" --phase infra
+      - run: |
+          az bicep install
+          az bicep build --file "infra/$PROJECT/main.bicep" --stdout > /dev/null
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Validate + what-if (review this before approving H5)
+        run: |
+          set -o pipefail
+          bash scripts/az_deploy.sh "$PROJECT" validate
+          bash scripts/az_deploy.sh "$PROJECT" whatif | tee whatif.txt
+          { echo "### H5 review — what-if for $PROJECT"; echo '```'; sed 's/\x1b\[[0-9;]*m//g' whatif.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: [detect, plan]
+    runs-on: ubuntu-latest
+    environment: production   # ← H5 gate: set Required reviewers on this environment
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.detect.outputs.projects) }}
+    env:
+      PROJECT: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - run: az bicep install
+      - run: bash scripts/az_deploy.sh "$PROJECT" create

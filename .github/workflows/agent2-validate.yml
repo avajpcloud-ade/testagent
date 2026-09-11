@@ -1,0 +1,105 @@
+name: agent2-validate
+
+# Runs on every PR that touches a project.
+# - Spec PRs (H1): the gate must PASS — a BLOCKED spec cannot be approved.
+# - Bicep PRs:     gate --phase infra, bicep build/lint, validate, what-if (shown in the job summary).
+
+on:
+  pull_request:
+    paths: ['design/**', 'work/**', 'infra/**', 'schemas/**', 'scripts/**']
+
+permissions:
+  contents: read
+  id-token: write   # Azure OIDC login
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.p.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - id: p
+        env:
+          BASE: origin/${{ github.base_ref }}
+        run: |
+          projects=$(git diff --name-only "$BASE...HEAD" \
+            | awk -F/ '($1=="design"||$1=="work"||$1=="infra") && NF>2 {print $2}' | sort -u \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "projects=$projects" >> "$GITHUB_OUTPUT"
+          echo "Projects: $projects"
+
+      - name: H1 separation — spec and Bicep must not change in the same PR
+        env:
+          BASE: origin/${{ github.base_ref }}
+          PROJECTS: ${{ steps.p.outputs.projects }}
+        run: |
+          changed=$(git diff --name-only "$BASE...HEAD")
+          for p in $(echo "$PROJECTS" | jq -r '.[]'); do
+            if grep -qx "work/$p/normalized.json" <<< "$changed" && grep -q "^infra/$p/" <<< "$changed"; then
+              echo "::error::$p: normalized.json and infra/ changed in the same PR. Get H1 approval on the spec first."
+              exit 1
+            fi
+          done
+
+  validate:
+    needs: detect
+    if: needs.detect.outputs.projects != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect.outputs.projects) }}
+    env:
+      PROJECT: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+
+      - run: pip install jsonschema
+
+      - id: state
+        run: |
+          echo "has_spec=$([ -f "work/$PROJECT/normalized.json" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "has_infra=$([ -f "infra/$PROJECT/main.bicep" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: No Agent2 artifacts yet
+        if: steps.state.outputs.has_spec != 'true'
+        run: echo "::notice::$PROJECT has no work/ artifacts yet — run agent2-extract."
+
+      - name: Agent2 gate
+        if: steps.state.outputs.has_spec == 'true'
+        env:
+          PHASE: ${{ steps.state.outputs.has_infra == 'true' && 'infra' || 'spec' }}
+        run: |
+          set -o pipefail
+          python scripts/agent2_gate.py "$PROJECT" --phase "$PHASE" | tee gate.txt
+          { echo "### Agent2 gate: $PROJECT ($PHASE)"; echo '```'; cat gate.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Bicep build / lint
+        if: steps.state.outputs.has_infra == 'true'
+        run: |
+          az bicep install
+          az bicep build --file "infra/$PROJECT/main.bicep" --stdout > /dev/null
+          az bicep lint --file "infra/$PROJECT/main.bicep"
+          az bicep build-params --file "infra/$PROJECT/main.bicepparam" --stdout > /dev/null
+
+      - name: Azure login (OIDC)
+        if: steps.state.outputs.has_infra == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate + what-if
+        if: steps.state.outputs.has_infra == 'true'
+        run: |
+          set -o pipefail
+          bash scripts/az_deploy.sh "$PROJECT" validate
+          bash scripts/az_deploy.sh "$PROJECT" whatif | tee whatif.txt
+          { echo "### What-if: $PROJECT"; echo '```'; sed 's/\x1b\[[0-9;]*m//g' whatif.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

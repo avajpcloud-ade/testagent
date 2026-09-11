@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "extracted-parameters.schema.json",
+  "title": "Agent2 ① extracted-parameters.json — raw values as written in the sources",
+  "type": "object",
+  "required": ["schemaVersion", "project", "sourceDocuments", "parameters"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "project": { "type": "string", "minLength": 1 },
+    "sourceDocuments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "role"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "description": "Repo-relative path" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "role": { "enum": ["design", "supplement", "existing-iac", "answers"] }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "rawValue", "sourceRef", "quote"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^P-[0-9]{3,}$" },
+          "label": { "type": "string", "description": "What the value is, in the document's own terms" },
+          "rawValue": { "type": "string", "description": "Exactly as written, including 未定 / TBD" },
+          "sourceRef": {
+            "type": "object",
+            "required": ["path", "location"],
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string" },
+              "location": { "type": "string", "description": "Heading path, table+row, or sheet!cell" }
+            }
+          },
+          "quote": { "type": "string", "maxLength": 300 }
+        }
+      }
+    }
+  }
+}

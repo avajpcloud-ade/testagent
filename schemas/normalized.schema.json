@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized.schema.json",
+  "title": "Agent2 ③ normalized.json — canonical Azure values with status; the only input to Bicep generation",
+  "type": "object",
+  "required": ["schemaVersion", "project", "target", "resources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "project": { "type": "string", "minLength": 1 },
+    "target": {
+      "type": "object",
+      "required": ["scope", "subscriptionId", "location"],
+      "additionalProperties": false,
+      "properties": {
+        "scope": { "$ref": "#/$defs/field" },
+        "subscriptionId": { "$ref": "#/$defs/field" },
+        "resourceGroup": { "$ref": "#/$defs/field" },
+        "location": { "$ref": "#/$defs/field" }
+      }
+    },
+    "tags": { "type": "object", "additionalProperties": { "$ref": "#/$defs/field" } },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "logicalName", "settings"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^R-[0-9]{3,}$" },
+          "type": { "type": "string" },
+          "logicalName": { "type": "string" },
+          "dependsOn": { "type": "array", "items": { "type": "string", "pattern": "^R-[0-9]{3,}$" } },
+          "settings": { "type": "object", "minProperties": 1, "additionalProperties": { "$ref": "#/$defs/field" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": ["value", "status", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {},
+        "status": { "enum": ["confirmed", "answered", "missing", "ambiguous", "conflict"] },
+        "sources": { "type": "array", "items": { "type": "string", "pattern": "^P-[0-9]{3,}$" } },
+        "normalizedFrom": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

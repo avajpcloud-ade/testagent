@@ -1,0 +1,10 @@
+# H1 — design-interpretation approvers review the internal contract
+/work/    @your-org/design-reviewers
+
+# Bicep reviewers (the H5 deploy approval itself lives on the `production` environment)
+/infra/   @your-org/platform-team
+
+# Changes to the gate, schemas, agents, and workflows need platform review
+/scripts/ @your-org/platform-team
+/schemas/ @your-org/platform-team
+/.github/ @your-org/platform-team
