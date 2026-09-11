@@ -31,7 +31,7 @@ Do not read other projects' folders. Values from other projects are not sources.
 ## Procedure
 Use the todo list to track these steps.
 
-1. **Inventory.** List every file you will read. Compute `sha256sum` for each and record it in `sourceDocuments` with its role (`design`, `supplement`, `existing-iac`, `answers`). The gate uses these hashes to detect stale artifacts.
+1. **Inventory.** List every file you will read. Compute the SHA-256 of each and record it in `sourceDocuments` with its role (`design`, `supplement`, `existing-iac`, `answers`). The schema requires **lowercase** hex: use `sha256sum <file>` on Linux/macOS, or in PowerShell `(Get-FileHash <file> -Algorithm SHA256).Hash.ToLower()` — `Get-FileHash` returns uppercase, which the gate rejects. The gate uses these hashes to detect stale artifacts.
 
 2. **Extract → ①.** Walk the documents section by section, table row by table row. Every concrete value becomes a parameter `P-001`, `P-002`, …:
    - `rawValue`: the value exactly as written (including 「未定」「別途決定」「TBD」 — these are values that mean *missing*).

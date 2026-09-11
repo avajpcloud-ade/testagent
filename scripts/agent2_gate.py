@@ -206,6 +206,12 @@ def check(project: str, phase: str):
 
 
 def main() -> int:
+    # Windows consoles use the locale code page (cp932 on Japanese systems), which
+    # can encode neither the em dashes nor 差戻し below. CI is already UTF-8.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("project")
     ap.add_argument("--phase", choices=["spec", "infra"], default="spec")
