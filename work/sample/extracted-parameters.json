@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "project": "sample",
+  "sourceDocuments": [
+    {
+      "path": "design/sample/detailed-design.md",
+      "sha256": "234eb0842bc07c58da30aef877b0b075f8605b2e02382c682edbd5e83324b992",
+      "role": "design"
+    }
+  ],
+  "parameters": [
+    { "id": "P-001", "label": "subscriptionId", "rawValue": "00000000-0000-0000-0000-000000000000", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "1. デプロイ先 > table: サブスクリプションID" }, "quote": "00000000-0000-0000-0000-000000000000" },
+    { "id": "P-002", "label": "deployScope", "rawValue": "リソースグループ", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "1. デプロイ先 > table: デプロイスコープ" }, "quote": "リソースグループ" },
+    { "id": "P-003", "label": "resourceGroupName", "rawValue": "rg-sample-web-dev", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "1. デプロイ先 > table: リソースグループ名" }, "quote": "rg-sample-web-dev" },
+    { "id": "P-004", "label": "location", "rawValue": "東日本", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "1. デプロイ先 > table: リージョン" }, "quote": "東日本" },
+    { "id": "P-005", "label": "R-001.name", "rawValue": "asp-sample-web-dev", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.1 App Service プラン > リソース名" }, "quote": "asp-sample-web-dev" },
+    { "id": "P-006", "label": "R-001.sku", "rawValue": "Premium v3 P1v3", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.1 App Service プラン > SKU / プラン" }, "quote": "Premium v3 P1v3" },
+    { "id": "P-007", "label": "R-001.os", "rawValue": "Linux", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.1 App Service プラン > 備考" }, "quote": "OS: Linux" },
+    { "id": "P-008", "label": "R-002.name", "rawValue": "app-sample-web-dev", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.2 Web アプリ > リソース名" }, "quote": "app-sample-web-dev" },
+    { "id": "P-009", "label": "R-002.planRef", "rawValue": "（No.1 のプランを使用）", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.2 Web アプリ > SKU / プラン" }, "quote": "（No.1 のプランを使用）" },
+    { "id": "P-010", "label": "R-002.runtime", "rawValue": "ランタイムは別途決定", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.2 Web アプリ > 備考" }, "quote": "ランタイムは別途決定" },
+    { "id": "P-011", "label": "R-003.name", "rawValue": "stsamplewebdev001", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.3 ストレージアカウント > リソース名" }, "quote": "stsamplewebdev001" },
+    { "id": "P-012", "label": "R-003.sku", "rawValue": "Standard / LRS", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.3 ストレージアカウント > SKU / プラン" }, "quote": "Standard / LRS" },
+    { "id": "P-013", "label": "R-003.kind", "rawValue": "StorageV2", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.3 ストレージアカウント > 備考" }, "quote": "種類: StorageV2" },
+    { "id": "P-014", "label": "R-004.name", "rawValue": "vnet-sample-web-dev", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.4 仮想ネットワーク > リソース名" }, "quote": "vnet-sample-web-dev" },
+    { "id": "P-015", "label": "R-004.addressSpace", "rawValue": "10.10.0.0/16", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.4 仮想ネットワーク > 備考" }, "quote": "アドレス空間 10.10.0.0/16" },
+    { "id": "P-016", "label": "R-005.name", "rawValue": "pe-stsamplewebdev001-blob", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.5 プライベートエンドポイント > リソース名" }, "quote": "pe-stsamplewebdev001-blob" },
+    { "id": "P-017", "label": "R-005.target", "rawValue": "No.3 の blob 用", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "2. リソース一覧 > No.5 プライベートエンドポイント > 備考" }, "quote": "No.3 の blob 用" },
+    { "id": "P-018", "label": "subnet.snet-app", "rawValue": "10.10.1.0/24", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "3. ネットワーク > サブネット snet-app" }, "quote": "サブネット `snet-app`（10.10.1.0/24）" },
+    { "id": "P-019", "label": "privateDns.zone", "rawValue": "privatelink.blob.core.windows.net", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "3. ネットワーク > private DNS" }, "quote": "プライベート DNS ゾーン `privatelink.blob.core.windows.net` を作成" },
+    { "id": "P-020", "label": "webapp.httpsOnly", "rawValue": "HTTPS のみ許可", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "4. セキュリティ > Web アプリ" }, "quote": "Web アプリは HTTPS のみ許可" },
+    { "id": "P-021", "label": "webapp.minTlsVersion", "rawValue": "1.2", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "4. セキュリティ > Web アプリ" }, "quote": "最小 TLS バージョンは 1.2 とする" },
+    { "id": "P-022", "label": "storage.minTlsVersion", "rawValue": "1.2", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "4. セキュリティ > ストレージアカウント" }, "quote": "ストレージアカウントの最小 TLS バージョンは 1.2" },
+    { "id": "P-023", "label": "storage.blobAnonymousAccess", "rawValue": "無効", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "4. セキュリティ > ストレージアカウント" }, "quote": "BLOB の匿名アクセスは無効とする" },
+    { "id": "P-024", "label": "webapp.systemAssignedId", "rawValue": "有効", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "4. セキュリティ > Web アプリ" }, "quote": "Web アプリはシステム割り当てマネージド ID を有効にする" },
+    { "id": "P-025", "label": "rbac.principal1.role", "rawValue": "ストレージ BLOB データ共同作成者", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "5. RBAC > row 1" }, "quote": "ストレージ BLOB データ共同作成者" },
+    { "id": "P-026", "label": "rbac.principal2.objectId", "rawValue": "未定", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "5. RBAC > row 2" }, "quote": "オブジェクトID: 未定" },
+    { "id": "P-027", "label": "tag.env", "rawValue": "dev", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "6. タグ > env" }, "quote": "dev" },
+    { "id": "P-028", "label": "tag.system", "rawValue": "sample-web", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "6. タグ > system" }, "quote": "sample-web" },
+    { "id": "P-029", "label": "rbac.principal2.role", "rawValue": "閲覧者", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "5. RBAC > row 2" }, "quote": "閲覧者" },
+    { "id": "P-030", "label": "storage.publicNetworkAccess", "rawValue": "無効", "sourceRef": { "path": "design/sample/detailed-design.md", "location": "3. ネットワーク" }, "quote": "パブリックネットワークアクセスは無効とする" }
+  ]
+}
