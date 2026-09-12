@@ -188,7 +188,14 @@ def check(project: str, phase: str):
         # field that is now resolved sends the design team to answer something
         # already decided, and a stale count misstates how much work is left.
         status_by_path = dict(iter_fields(norm))
+        asked: dict[str, str] = {}
         for qid, qpath in re.findall(r"^###\s+(Q-\d+)\s+`([^`]+)`", issue_text, re.MULTILINE):
+            if qpath in asked:
+                errors.append(
+                    f"issue-report.md {qid} and {asked[qpath]} both ask about `{qpath}` — "
+                    "one question per field"
+                )
+            asked[qpath] = qid
             if qpath not in status_by_path:
                 errors.append(f"issue-report.md {qid}: `{qpath}` is not a field in normalized.json")
             elif status_by_path[qpath]["status"] in RESOLVED:
