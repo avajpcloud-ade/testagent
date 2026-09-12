@@ -2,14 +2,44 @@
   "schemaVersion": "1.0",
   "project": "sample",
   "target": {
-    "scope": { "raw": "リソースグループ", "sources": ["P-002"] },
-    "subscriptionId": { "raw": "00000000-0000-0000-0000-000000000000", "sources": ["P-001"] },
-    "resourceGroup": { "raw": "rg-sample-web-dev", "sources": ["P-003"] },
-    "location": { "raw": "東日本", "sources": ["P-004"] }
+    "scope": {
+      "raw": "リソースグループ",
+      "sources": [
+        "P-002"
+      ]
+    },
+    "subscriptionId": {
+      "raw": "00000000-0000-0000-0000-000000000000",
+      "sources": [
+        "P-001"
+      ]
+    },
+    "resourceGroup": {
+      "raw": "rg-sample-web-dev",
+      "sources": [
+        "P-003"
+      ]
+    },
+    "location": {
+      "raw": "東日本",
+      "sources": [
+        "P-004"
+      ]
+    }
   },
   "tags": {
-    "env": { "raw": "dev", "sources": ["P-027"] },
-    "system": { "raw": "sample-web", "sources": ["P-028"] }
+    "env": {
+      "raw": "dev",
+      "sources": [
+        "P-027"
+      ]
+    },
+    "system": {
+      "raw": "sample-web",
+      "sources": [
+        "P-028"
+      ]
+    }
   },
   "resources": [
     {
@@ -17,8 +47,18 @@
       "type": "Microsoft.Web/serverFarms",
       "logicalName": "asp-sample-web-dev",
       "settings": {
-        "sku.name": { "raw": "Premium v3 P1v3", "sources": ["P-006"] },
-        "kind": { "raw": "Linux", "sources": ["P-007"] }
+        "sku.name": {
+          "raw": "Premium v3 P1v3",
+          "sources": [
+            "P-006"
+          ]
+        },
+        "kind": {
+          "raw": "Linux",
+          "sources": [
+            "P-007"
+          ]
+        }
       }
     },
     {
@@ -26,13 +66,42 @@
       "type": "Microsoft.Web/sites",
       "logicalName": "app-sample-web-dev",
       "settings": {
-        "serverFarmId": { "raw": "（No.1 のプランを使用）", "sources": ["P-009"] },
-        "properties.runtime": { "raw": "ランタイムは別途決定", "sources": ["P-010"] }
-        ,
-        "properties.httpsOnly": { "raw": "HTTPS のみ許可", "sources": ["P-020"] },
-        "properties.minTlsVersion": { "raw": "1.2", "sources": ["P-021"] },
-        "identity.type": { "raw": "有効", "sources": ["P-024"] }
-        ,"properties.siteConfig.virtualNetworkSubnetId": { "raw": "snet-app (No.4 の VNet)", "sources": ["P-018"] }
+        "serverFarmId": {
+          "raw": "（No.1 のプランを使用）",
+          "sources": [
+            "P-009"
+          ]
+        },
+        "properties.runtime": {
+          "raw": "PYTHON|3.12",
+          "sources": [
+            "P-032"
+          ]
+        },
+        "properties.httpsOnly": {
+          "raw": "HTTPS のみ許可",
+          "sources": [
+            "P-020"
+          ]
+        },
+        "properties.minTlsVersion": {
+          "raw": "1.2",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "identity.type": {
+          "raw": "有効",
+          "sources": [
+            "P-024"
+          ]
+        },
+        "properties.siteConfig.virtualNetworkSubnetId": {
+          "raw": "R-004:properties.subnets[0]",
+          "sources": [
+            "P-018"
+          ]
+        }
       }
     },
     {
@@ -40,11 +109,36 @@
       "type": "Microsoft.Storage/storageAccounts",
       "logicalName": "stsamplewebdev001",
       "settings": {
-        "sku.name": { "raw": "Standard / LRS", "sources": ["P-012"] },
-        "kind": { "raw": "StorageV2", "sources": ["P-013"] },
-        "properties.minimumTlsVersion": { "raw": "1.2", "sources": ["P-022"] },
-        "properties.allowBlobPublicAccess": { "raw": "無効", "sources": ["P-023"] }
-        ,"properties.publicNetworkAccess": { "raw": "無効", "sources": ["P-030"] }
+        "sku.name": {
+          "raw": "Standard / LRS",
+          "sources": [
+            "P-012"
+          ]
+        },
+        "kind": {
+          "raw": "StorageV2",
+          "sources": [
+            "P-013"
+          ]
+        },
+        "properties.minimumTlsVersion": {
+          "raw": "1.2",
+          "sources": [
+            "P-022"
+          ]
+        },
+        "properties.allowBlobPublicAccess": {
+          "raw": "無効",
+          "sources": [
+            "P-023"
+          ]
+        },
+        "properties.publicNetworkAccess": {
+          "raw": "無効",
+          "sources": [
+            "P-030"
+          ]
+        }
       }
     },
     {
@@ -52,9 +146,36 @@
       "type": "Microsoft.Network/virtualNetworks",
       "logicalName": "vnet-sample-web-dev",
       "settings": {
-        "properties.addressSpace.addressPrefixes": { "raw": "10.10.0.0/16", "sources": ["P-015"] }
-        ,"properties.subnets[0].name": { "raw": "snet-app", "sources": ["P-018"] }
-        ,"properties.subnets[0].properties.addressPrefix": { "raw": "10.10.1.0/24", "sources": ["P-018"] }
+        "properties.addressSpace.addressPrefixes": {
+          "raw": "10.10.0.0/16",
+          "sources": [
+            "P-015"
+          ]
+        },
+        "properties.subnets[0].name": {
+          "raw": "snet-app",
+          "sources": [
+            "P-018"
+          ]
+        },
+        "properties.subnets[0].properties.addressPrefix": {
+          "raw": "10.10.1.0/24",
+          "sources": [
+            "P-018"
+          ]
+        },
+        "properties.subnets[1].name": {
+          "raw": "snet-pe",
+          "sources": [
+            "P-031"
+          ]
+        },
+        "properties.subnets[1].properties.addressPrefix": {
+          "raw": "10.10.2.0/24",
+          "sources": [
+            "P-031"
+          ]
+        }
       }
     },
     {
@@ -62,8 +183,18 @@
       "type": "Microsoft.Network/privateEndpoints",
       "logicalName": "pe-stsamplewebdev001-blob",
       "settings": {
-        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": { "raw": "No.3 の blob 用", "sources": ["P-017"] },
-        "properties.subnet.id": { "raw": null, "sources": [] }
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
+          "raw": "No.3 の blob 用",
+          "sources": [
+            "P-017"
+          ]
+        },
+        "properties.subnet.id": {
+          "raw": "R-004:properties.subnets[1]",
+          "sources": [
+            "P-031"
+          ]
+        }
       }
     },
     {
@@ -71,30 +202,68 @@
       "type": "Microsoft.Network/privateDnsZones",
       "logicalName": "privatelink.blob.core.windows.net",
       "settings": {
-        "zoneName": { "raw": "privatelink.blob.core.windows.net", "sources": ["P-019"] },
-        "links": { "raw": "No.4 の VNet にリンク", "sources": ["P-014"] }
+        "zoneName": {
+          "raw": "privatelink.blob.core.windows.net",
+          "sources": [
+            "P-019"
+          ]
+        },
+        "links": {
+          "raw": "No.4 の VNet にリンク",
+          "sources": [
+            "P-014"
+          ]
+        }
       }
-    }
-    ,
+    },
     {
       "id": "R-007",
       "type": "Microsoft.Authorization/roleAssignments",
       "logicalName": "rbac-principal1-storage-blob",
       "settings": {
-        "properties.role": { "raw": "ストレージ BLOB データ共同作成者", "sources": ["P-025"] },
-        "properties.principal": { "raw": "Web アプリのシステム割り当てマネージド ID", "sources": [] },
-        "properties.scope": { "raw": "No.3 ストレージアカウント", "sources": [] }
+        "properties.role": {
+          "raw": "ストレージ BLOB データ共同作成者",
+          "sources": [
+            "P-025"
+          ]
+        },
+        "properties.principal": {
+          "raw": "Web アプリのシステム割り当てマネージド ID",
+          "sources": [
+            "P-024"
+          ]
+        },
+        "properties.scope": {
+          "raw": "No.3 ストレージアカウント",
+          "sources": [
+            "P-011"
+          ]
+        }
       }
-    }
-    ,
+    },
     {
       "id": "R-008",
       "type": "Microsoft.Authorization/roleAssignments",
       "logicalName": "rbac-principal2-rg-reader",
       "settings": {
-        "properties.role": { "raw": "閲覧者", "sources": [] },
-        "properties.principal": { "raw": "運用チーム (Entra ID グループ, オブジェクトID: 未定)", "sources": ["P-026"] },
-        "properties.scope": { "raw": "resourceGroup", "sources": ["P-003"] }
+        "properties.role": {
+          "raw": "閲覧者",
+          "sources": [
+            "P-029"
+          ]
+        },
+        "properties.principal": {
+          "raw": "11111111-2222-3333-4444-555555555555",
+          "sources": [
+            "P-033"
+          ]
+        },
+        "properties.scope": {
+          "raw": "リソースグループ",
+          "sources": [
+            "P-003"
+          ]
+        }
       }
     }
   ]
