@@ -4,7 +4,7 @@ description: "Agent2 phase 1 (抽出・正規化). Reads design/<project>/ and p
 tools: ['read', 'edit', 'search', 'execute', 'todo']
 # Extraction is a careful-reading task: a weaker model drops requirements written
 # as prose and mislabels stated values as missing. First available model is used.
-model: ['Claude Opus 4.5', 'Claude Sonnet 4.5', 'GPT-5']
+model: ['Claude Opus 5', 'Claude Sonnet 5', 'Claude Opus 4.5', 'Claude Sonnet 4.5']
 handoffs:
   - label: "H1 approved → 生成・検証"
     agent: agent2-generate

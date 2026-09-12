@@ -5,7 +5,7 @@ description: "Agent2 phase 2 (生成・検証). Generates Bicep + .bicepparam fr
 tools: ['read', 'edit', 'search', 'execute', 'todo']
 # Bicep generation has to hold the whole normalized spec in view at once.
 # First available model is used.
-model: ['Claude Opus 4.5', 'Claude Sonnet 4.5', 'GPT-5']
+model: ['Claude Opus 5', 'Claude Sonnet 5', 'Claude Opus 4.5', 'Claude Sonnet 4.5']
 handoffs:
   - label: "Spec problem → 抽出・正規化へ戻す"
     agent: agent2-extract
