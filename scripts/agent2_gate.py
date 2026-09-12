@@ -24,6 +24,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RESOLVED = {"confirmed", "answered"}
+# Wordings that mean "not decided yet". A field is only genuinely `missing` if the
+# design says nothing, or says one of these.
+GAP_MARKERS = re.compile(r"未定|未確定|別途決定|別途指定|要確認|検討中|TBD|N/?A", re.IGNORECASE)
 SCOPES = {"resourceGroup", "subscription"}
 TRACE_COLUMNS = ["field_path", "value", "status", "source_ids", "source_locations", "bicep_ref"]
 ARTIFACTS = {
@@ -165,6 +168,21 @@ def check(project: str, phase: str):
                 blocking.append(f"{path} [{status}]")
                 if f"`{path}`" not in issue_text:
                     errors.append(f"{path}: unresolved but not listed in issue-report.md (expected `{path}`)")
+                # `missing` means the design says nothing. Citing a source that does
+                # state a value contradicts that, and produces a question whose own
+                # 現状の記載 line is the answer. (`ambiguous` and `conflict` are
+                # different: those legitimately cite stated-but-unusable values.)
+                if status == "missing":
+                    stated = [
+                        s for s in f["sources"]
+                        if s in params and not GAP_MARKERS.search(str(params[s]["rawValue"]))
+                    ]
+                    if stated:
+                        quoted = ", ".join(f"{s}={params[s]['rawValue']!r}" for s in stated)
+                        errors.append(
+                            f"{path}: status 'missing' but its sources state a value ({quoted}) — "
+                            "normalize it, or use 'ambiguous'/'conflict' if it cannot be mapped"
+                        )
 
         scope = norm["target"]["scope"]
         if scope["status"] in RESOLVED:
