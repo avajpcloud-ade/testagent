@@ -184,6 +184,25 @@ def check(project: str, phase: str):
                             "normalize it, or use 'ambiguous'/'conflict' if it cannot be mapped"
                         )
 
+        # Questions must track ③ in both directions. A leftover question about a
+        # field that is now resolved sends the design team to answer something
+        # already decided, and a stale count misstates how much work is left.
+        status_by_path = dict(iter_fields(norm))
+        for qid, qpath in re.findall(r"^###\s+(Q-\d+)\s+`([^`]+)`", issue_text, re.MULTILINE):
+            if qpath not in status_by_path:
+                errors.append(f"issue-report.md {qid}: `{qpath}` is not a field in normalized.json")
+            elif status_by_path[qpath]["status"] in RESOLVED:
+                errors.append(
+                    f"issue-report.md {qid}: `{qpath}` is now "
+                    f"'{status_by_path[qpath]['status']}' — remove the question"
+                )
+        stated_count = re.search(r"未解決\s*(\d+)\s*件", issue_text)
+        if stated_count and int(stated_count.group(1)) != len(blocking):
+            errors.append(
+                f"issue-report.md says 未解決 {stated_count.group(1)} 件 "
+                f"but {len(blocking)} fields are unresolved"
+            )
+
         scope = norm["target"]["scope"]
         if scope["status"] in RESOLVED:
             if scope["value"] not in SCOPES:
