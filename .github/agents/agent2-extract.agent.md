@@ -2,6 +2,9 @@
 name: agent2-extract
 description: "Agent2 phase 1 (抽出・正規化). Reads design/<project>/ and produces the internal contract ①–④ in work/<project>/. Never guesses missing values — turns them into questions for the design team."
 tools: ['read', 'edit', 'search', 'execute', 'todo']
+# Extraction is a careful-reading task: a weaker model drops requirements written
+# as prose and mislabels stated values as missing. First available model is used.
+model: ['Claude Opus 4.5', 'Claude Sonnet 4.5', 'GPT-5']
 handoffs:
   - label: "H1 approved → 生成・検証"
     agent: agent2-generate
