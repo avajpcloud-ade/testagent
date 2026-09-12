@@ -46,6 +46,7 @@ Use the todo list to track these steps.
    - `settings`: keyed by ARM-style paths (`name`, `sku.name`, `kind`, `properties.httpsOnly`, …). `raw` is the design wording; `sources` are P-IDs.
    - Include every setting the documents mention **and** every setting Azure requires to deploy that resource type (check the resource schema — use the Bicep MCP server if available). A required setting the documents don't state gets `raw: null`, `sources: []`.
    - `tags`: from the documents only.
+   - **Every `P-` ID from ① must land somewhere**: in some field's `sources`, as a resource's `logicalName`, or as a question in ④. Requirements written as prose rather than in a resource table are the easy ones to lose — security settings (HTTPS-only, minimum TLS, managed identity, public network access) and **every row of the RBAC table** are resources and settings like any other. The gate fails with `extracted but neither used nor asked about` if one disappears.
 
 4. **Normalize → ③.** Same resource IDs and same setting keys as ②, with canonical values:
    - Allowed: deterministic mapping of what is written — 東日本 → `japaneast`, 「Premium v3 P1v3」 → `P1v3`, 「Standard / LRS」 → `Standard_LRS`, 「TLS 1.2以上」 → `TLS1_2`, 閲覧者 → built-in role `Reader`. Record the original in `normalizedFrom`.

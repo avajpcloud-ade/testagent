@@ -18,6 +18,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -190,7 +191,28 @@ def check(project: str, phase: str):
                 if row["status"] != expected:
                     errors.append(f"traceability.csv status for {p} is '{row['status']}', normalized.json says '{expected}'")
 
-        # ---- 6. infra phase --------------------------------------------------
+        # ---- 6. nothing extracted in ① was silently dropped -------------------
+        # ② and ③ agreeing proves only that they match each other; a requirement
+        # both dropped leaves no trace at all. So check ① → ②③ as well: every
+        # parameter must reach a field, be consumed as a resource name, or be
+        # asked about. Otherwise a security control can vanish between ① and ②
+        # while the gate still reports a clean BLOCKED.
+        used = {s for doc in (norm, spec) for _, f in iter_fields(doc) for s in f["sources"]}
+        logical_names = {r.get("logicalName") for r in norm["resources"]}
+        dropped = [
+            f"{pid} ({params[pid]['label']})"
+            for pid in params
+            if pid not in used
+            and params[pid]["rawValue"] not in logical_names
+            and not re.search(rf"\b{re.escape(pid)}\b", issue_text)
+        ]
+        if dropped:
+            errors.append(
+                "extracted but neither used nor asked about — re-run agent2-extract: "
+                f"{dropped[:10]}{' …' if len(dropped) > 10 else ''}"
+            )
+
+        # ---- 7. infra phase --------------------------------------------------
         if phase == "infra":
             for name in ("main.bicep", "main.bicepparam"):
                 if not (infra / name).exists():
