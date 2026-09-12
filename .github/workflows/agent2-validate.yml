@@ -83,10 +83,21 @@ jobs:
       - name: Bicep build / lint
         if: steps.state.outputs.has_infra == 'true'
         run: |
+          set -o pipefail
           az bicep install
-          az bicep build --file "infra/$PROJECT/main.bicep" --stdout > /dev/null
-          az bicep lint --file "infra/$PROJECT/main.bicep"
-          az bicep build-params --file "infra/$PROJECT/main.bicepparam" --stdout > /dev/null
+          # Bicep exits 0 on warnings, and the two that matter most here are
+          # warnings: a parameter carrying a requirement but never applied to a
+          # resource, and a property placed where the resource type ignores it.
+          # Both deploy "successfully" with the requirement missing, so treat any
+          # diagnostic as a failure.
+          az bicep build --file "infra/$PROJECT/main.bicep" --stdout 2> diag.log > /dev/null
+          az bicep lint --file "infra/$PROJECT/main.bicep" 2>> diag.log
+          az bicep build-params --file "infra/$PROJECT/main.bicepparam" --stdout 2>> diag.log > /dev/null
+          if grep -qE ' : (Warning|Error) ' diag.log; then
+            echo "::error::bicep reported diagnostics for $PROJECT"
+            sort -u diag.log | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: Azure login (OIDC)
         if: steps.state.outputs.has_infra == 'true'
