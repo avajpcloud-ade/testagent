@@ -68,6 +68,8 @@ CI also refuses a PR that changes `normalized.json` and `infra/` together, so H1
 
 `design/sample/detailed-design.md` contains deliberate gaps: the Web App runtime (「別途決定」), the private endpoint's subnet (never defined), and the ops team's group object ID (「未定」). A correct first run is **BLOCKED** with questions in the Other / Network / RBAC categories. If the agent fills any of those in, tighten the prompt before using it on real projects.
 
+[`EVALUATION.md`](EVALUATION.md) records the first end-to-end run: what the agent got right, the three ways it failed, the six gate checks added in response, and what the gate structurally cannot catch. Read it before trusting this on a real project.
+
 ## Running it with Copilot cloud agent instead
 
 The same `.github/agents/` files can be used by Copilot cloud agent: open an issue like "Run agent2-extract for project sample" and assign it to Copilot with that agent selected. It works on a branch and opens a PR, which becomes the H1 PR naturally. You'll need a `copilot-setup-steps.yml` to install `jsonschema`, `markitdown`, and Bicep in its environment, and handoff buttons are VS Code only.
