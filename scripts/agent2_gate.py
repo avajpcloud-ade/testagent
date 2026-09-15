@@ -261,6 +261,16 @@ def check(project: str, phase: str):
             for name in ("main.bicep", "main.bicepparam"):
                 if not (infra / name).exists():
                     errors.append(f"missing: {rel(infra / name)}")
+            # A .bicepparam holding ARM JSON parses as neither, and az rejects it
+            # outright — but only build-params says so, and that is easy to skip.
+            params_file = infra / "main.bicepparam"
+            if params_file.exists():
+                text = params_file.read_text(encoding="utf-8")
+                if not re.search(r"^\s*using\s", text, re.MULTILINE):
+                    errors.append(
+                        f"{rel(params_file)} has no 'using' declaration — a Bicep "
+                        "parameters file is Bicep, not ARM JSON"
+                    )
             no_ref = [r["field_path"] for r in rows if r["status"] in RESOLVED and not r["bicep_ref"].strip()]
             if no_ref:
                 errors.append(f"traceability rows without bicep_ref: {no_ref[:10]}{' …' if len(no_ref) > 10 else ''}")
