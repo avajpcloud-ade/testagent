@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0",
+  "project": "retest",
+  "target": {
+    "scope": { "value": "resourceGroup", "status": "confirmed", "sources": ["P-002"], "normalizedFrom": "リソースグループ" },
+    "subscriptionId": { "value": "00000000-0000-0000-0000-000000000000", "status": "confirmed", "sources": ["P-001"] },
+    "resourceGroup": { "value": "rg-sample-web-dev", "status": "confirmed", "sources": ["P-003"] },
+    "location": { "value": "japaneast", "status": "confirmed", "sources": ["P-004"], "normalizedFrom": "東日本" }
+  },
+  "tags": {
+    "env": { "value": "dev", "status": "confirmed", "sources": ["P-027"] },
+    "system": { "value": "sample-web", "status": "confirmed", "sources": ["P-028"] }
+  },
+  "resources": [
+    {
+      "id": "R-001",
+      "type": "Microsoft.Web/serverFarms",
+      "logicalName": "asp-sample-web-dev",
+      "settings": {
+        "sku.name": { "value": "P1v3", "status": "confirmed", "sources": ["P-006"], "normalizedFrom": "Premium v3 P1v3" },
+        "kind": { "value": "linux", "status": "confirmed", "sources": ["P-007"], "normalizedFrom": "Linux" }
+      }
+    },
+    {
+      "id": "R-002",
+      "type": "Microsoft.Web/sites",
+      "logicalName": "app-sample-web-dev",
+      "settings": {
+        "serverFarmId": { "value": "R-001", "status": "confirmed", "sources": ["P-010"], "normalizedFrom": "（No.1 のプランを使用）" },
+        "properties.runtime": { "value": "NODE|20-lts", "status": "answered", "sources": ["P-009", "P-031"], "normalizedFrom": "NODE|20-lts" },
+        "properties.httpsOnly": { "value": true, "status": "confirmed", "sources": ["P-020"], "normalizedFrom": "HTTPS のみ許可" },
+        "properties.minTlsVersion": { "value": "TLS1_2", "status": "confirmed", "sources": ["P-021"], "normalizedFrom": "1.2" },
+        "identity.type": { "value": "SystemAssigned", "status": "confirmed", "sources": ["P-024"], "normalizedFrom": "有効" },
+        "properties.siteConfig.virtualNetworkSubnetId": { "value": "R-004:properties.subnets[0]", "status": "confirmed", "sources": ["P-018"], "note": "設計書: snet-app を Web アプリの VNet 統合に使用" }
+      }
+    },
+    {
+      "id": "R-003",
+      "type": "Microsoft.Storage/storageAccounts",
+      "logicalName": "stsamplewebdev001",
+      "settings": {
+        "sku.name": { "value": "Standard_LRS", "status": "confirmed", "sources": ["P-012"], "normalizedFrom": "Standard / LRS" },
+        "kind": { "value": "StorageV2", "status": "confirmed", "sources": ["P-013"] },
+        "properties.minimumTlsVersion": { "value": "TLS1_2", "status": "confirmed", "sources": ["P-022"], "normalizedFrom": "1.2" },
+        "properties.allowBlobPublicAccess": { "value": false, "status": "confirmed", "sources": ["P-023"], "normalizedFrom": "無効" },
+        "properties.publicNetworkAccess": { "value": "Disabled", "status": "confirmed", "sources": ["P-030"], "normalizedFrom": "無効" }
+      }
+    },
+    {
+      "id": "R-004",
+      "type": "Microsoft.Network/virtualNetworks",
+      "logicalName": "vnet-sample-web-dev",
+      "settings": {
+        "properties.addressSpace.addressPrefixes": { "value": ["10.10.0.0/16"], "status": "confirmed", "sources": ["P-015"] },
+        "properties.subnets[0].name": { "value": "snet-app", "status": "confirmed", "sources": ["P-018"], "normalizedFrom": "snet-app" },
+        "properties.subnets[0].properties.addressPrefix": { "value": "10.10.1.0/24", "status": "confirmed", "sources": ["P-018"] },
+        "properties.subnets[1].name": { "value": "snet-endpoint", "status": "answered", "sources": ["P-032"], "normalizedFrom": "snet-endpoint" },
+        "properties.subnets[1].properties.addressPrefix": { "value": "10.10.7.0/24", "status": "answered", "sources": ["P-032"] }
+      }
+    },
+    {
+      "id": "R-005",
+      "type": "Microsoft.Network/privateEndpoints",
+      "logicalName": "pe-stsamplewebdev001-blob",
+      "settings": {
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": { "value": "R-003", "status": "confirmed", "sources": ["P-017"], "normalizedFrom": "No.3 の blob 用" },
+        "properties.subnet.id": { "value": "R-004:properties.subnets[1]", "status": "answered", "sources": ["P-032"], "note": "answers.md により snet-endpoint を指定" }
+      }
+    },
+    {
+      "id": "R-006",
+      "type": "Microsoft.Network/privateDnsZones",
+      "logicalName": "privatelink.blob.core.windows.net",
+      "settings": {
+        "zoneName": { "value": "privatelink.blob.core.windows.net", "status": "confirmed", "sources": ["P-019"] },
+        "links": { "value": "R-004", "status": "confirmed", "sources": ["P-014"], "note": "設計書: No.4 の VNet にリンクする" }
+      }
+    },
+    {
+      "id": "R-007",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-principal1-storage-blob",
+      "settings": {
+        "properties.role": { "value": "Storage Blob Data Contributor", "status": "confirmed", "sources": ["P-025"], "normalizedFrom": "ストレージ BLOB データ共同作成者" },
+        "properties.principal": { "value": "R-002:identity", "status": "confirmed", "sources": ["P-024"], "note": "Web アプリのシステム割り当てマネージド ID を参照" },
+        "properties.scope": { "value": "R-003", "status": "confirmed", "sources": ["P-011"], "note": "ストレージアカウント (No.3) を参照" }
+      }
+    },
+    {
+      "id": "R-008",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-principal2-rg-reader",
+      "settings": {
+        "properties.role": { "value": "Reader", "status": "confirmed", "sources": ["P-029"], "normalizedFrom": "閲覧者" },
+        "properties.principal": { "value": "99999999-8888-7777-6666-555555555555", "status": "answered", "sources": ["P-026", "P-033"], "note": "answers.md により objectId を提供" },
+        "properties.scope": { "value": "target:resourceGroup", "status": "confirmed", "sources": ["P-003"], "note": "設計書上のスコープはリソースグループ" }
+      }
+    }
+  ]
+}

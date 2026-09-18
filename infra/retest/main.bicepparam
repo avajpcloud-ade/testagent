@@ -1,37 +1,32 @@
-{
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "location": { "value": "japaneast" },
-    "tags": { "value": { "env": "dev", "system": "sample-web" } },
+using 'main.bicep'
 
-    "aspName": { "value": "asp-sample-web-dev" },
-    "aspSkuName": { "value": "P1v3" },
-    "aspKind": { "value": "linux" },
-
-    "webAppName": { "value": "app-sample-web-dev" },
-    "webAppRuntime": { "value": "NODE|20-lts" },
-    "webAppHttpsOnly": { "value": true },
-    "webAppMinTlsVersion": { "value": "TLS1_2" },
-    "webAppSystemAssignedId": { "value": true },
-
-    "storageName": { "value": "stsamplewebdev001" },
-    "storageSku": { "value": "Standard_LRS" },
-    "storageKind": { "value": "StorageV2" },
-    "storageMinTlsVersion": { "value": "TLS1_2" },
-    "storageAllowBlobPublicAccess": { "value": false },
-    "storagePublicNetworkAccess": { "value": "Disabled" },
-
-    "vnetName": { "value": "vnet-sample-web-dev" },
-    "vnetAddressPrefixes": { "value": [ "10.10.0.0/16" ] },
-    "snetAppName": { "value": "snet-app" },
-    "snetAppPrefix": { "value": "10.10.1.0/24" },
-    "snetPeName": { "value": "snet-endpoint" },
-    "snetPePrefix": { "value": "10.10.7.0/24" },
-
-    "privateEndpointName": { "value": "pe-stsamplewebdev001-blob" },
-    "privateDnsZoneName": { "value": "privatelink.blob.core.windows.net" },
-
-    "readerPrincipalObjectId": { "value": "99999999-8888-7777-6666-555555555555" }
-  }
+param location = 'japaneast'
+param tags = {
+  env: 'dev'
+  system: 'sample-web'
 }
+param aspName = 'asp-sample-web-dev'
+param aspSkuName = 'P1v3'
+param aspKind = 'linux'
+param webAppName = 'app-sample-web-dev'
+param webAppRuntime = 'NODE|20-lts'
+param webAppHttpsOnly = true
+param webAppMinTlsVersion = 'TLS1_2'
+param webAppSystemAssignedId = true
+param storageName = 'stsamplewebdev001'
+param storageSku = 'Standard_LRS'
+param storageKind = 'StorageV2'
+param storageMinTlsVersion = 'TLS1_2'
+param storageAllowBlobPublicAccess = false
+param storagePublicNetworkAccess = 'Disabled'
+param vnetName = 'vnet-sample-web-dev'
+param vnetAddressPrefixes = [
+  '10.10.0.0/16'
+]
+param snetAppName = 'snet-app'
+param snetAppPrefix = '10.10.1.0/24'
+param snetPeName = 'snet-endpoint'
+param snetPePrefix = '10.10.7.0/24'
+param privateEndpointName = 'pe-stsamplewebdev001-blob'
+param privateDnsZoneName = 'privatelink.blob.core.windows.net'
+param readerPrincipalObjectId = '99999999-8888-7777-6666-555555555555'
