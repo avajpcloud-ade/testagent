@@ -188,6 +188,29 @@ stopping. Its instructions say to fix or justify every warning. It did neither.
 The lesson is not about Bicep. **An agent that cannot run its checks does not
 report that it is blind; it reports success.**
 
+## Step 8 — validated against real Azure
+
+Run on 2026-09-18 against a Visual Studio Enterprise subscription, into an empty
+resource group created for the purpose. Both commands are read-only.
+
+    az deployment group validate  →  "error": null
+    az deployment group what-if   →  status: Succeeded, 9 changes, all Create
+
+The nine are the eight resources in `normalized.json` plus the private DNS zone's
+virtual-network link, which is a child of the zone rather than a separate entry.
+Nothing extra, nothing missing, nothing modified.
+
+Two incidental findings. `main.bicep` takes no `subscriptionId` parameter — the
+deployment target comes from the CLI — so the design's placeholder subscription
+ID never mattered. And `stsamplewebdev001` was still globally available, so the
+one genuinely unique-per-tenant value in the design did not collide.
+
+What this does **not** cover: the OIDC half of step 8 (federated credentials, the
+three repository variables, the `production` environment) was not attempted. The
+subscription sits in a corporate Entra tenant, where creating an app registration
+is a directory change rather than a sandbox action. Nothing was deployed either —
+`what-if` creates no resources.
+
 ## What the gate can never catch
 
 Worth stating explicitly, because it bounds how much the automation can be
