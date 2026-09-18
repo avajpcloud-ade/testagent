@@ -1,12 +1,17 @@
-# Agent2 evaluation — sample project
+# Agent2 evaluation
 
-Record of the first end-to-end run of this kit, 2026-09-11 to 2026-09-12, against
-`design/sample/detailed-design.md`. Written up because the reasoning behind the
+Record of two end-to-end runs of this kit — `sample` (2026-09-11 to 09-12) and
+`retest` (09-14 to 09-18), both against the same design document. Written up because the reasoning behind the
 gate changes lives nowhere else, and the next person to touch this needs it.
 
 **Verdict: the pipeline works, and it is not a review-the-diff-and-merge tool.**
-Every stage did its job. But across seven agent runs, six new gate checks were
+Every stage did its job. But across ten agent runs, seven new gate checks were
 added, and the kit as originally shipped would have passed every defect found.
+
+The second round is the more encouraging one: extraction reached a correct
+BLOCKED on the first attempt rather than the fifth, and generation produced a
+template with zero diagnostics. It still shipped an undeployable parameter file
+and called it PASS.
 
 ## What was tested
 
@@ -28,6 +33,10 @@ Python 3.12, Azure CLI 2.90.0, Bicep 0.47.16.
 | 6 Answers → PASS → H1 | Pass — three fields resolved as `answered`, merged as `f75f27e` |
 | 7 Bicep generated | Pass on the 3rd attempt, after `az bicep lint` was made blocking |
 | 8 Connect Azure | Not attempted — needs a sandbox subscription |
+
+Second round, `retest`: extraction passed cold on the 1st attempt; generation
+produced a clean `main.bicep` on the 1st attempt but an ARM-JSON `.bicepparam`
+that had to be converted by hand.
 
 **The agent never invented a value.** Across every run, the three deliberate gaps
 stayed unresolved until `answers.md` supplied them. That is the property the kit
@@ -51,7 +60,7 @@ Windows clone CRLF, so the SHA-256 recorded locally would not match what CI
 recomputes on Linux, and the gate would call the artifacts stale. `ccbacd0` pins
 `* text=auto eol=lf`.
 
-## The three failure modes
+## First round — the three failure modes
 
 ### Run 1 — silent omission
 
@@ -85,8 +94,8 @@ verdict.
 
 ## Gate checks added
 
-The kit shipped with five checks. Six more were added, each after watching a run
-route around what existed.
+The kit shipped with five checks. Seven more were added, each after watching a
+run route around what existed.
 
 | Commit | Check | Caught |
 |---|---|---|
@@ -95,6 +104,7 @@ route around what existed.
 | `8e72ba4` | Every `Q-` heading must name a field that exists and is still unresolved; the 未解決 count must match | Two stale questions and a header claiming 11 when 4 were open |
 | `af5d425` | One question per field | Q-001 and Q-003 asking for the same subnet, word for word |
 | `ee71a0b` | CI fails on any bicep diagnostic, not only errors | Untagged resources and broken VNet integration |
+| `d9d77a2` | A `.bicepparam` must contain a `using` declaration | ARM JSON written into the parameter file, twice |
 
 `a9f054f` and `48b2837` pin the agents to stronger models; see the caveat below.
 
@@ -103,7 +113,7 @@ purely to avoid false positives. Both were verified against the real artifacts:
 the coverage check flags exactly the four lost controls out of 28 parameters,
 and clears when a correct extraction is simulated.
 
-## Bicep-layer findings
+## First round — Bicep-layer findings
 
 The generated template passed the gate with perfect traceability and was still
 wrong. Defects found by reading it, all in one generation:
@@ -124,6 +134,59 @@ traceability row reads `bicep_ref: main.bicepparam:tags`, which is technically
 true. The parameter exists. It just never reaches a resource.
 
 Both would have deployed "successfully" with the requirement quietly missing.
+
+## Second round — the `retest` project
+
+`design/retest/` is a byte-identical copy of the sample document. The answers
+differ deliberately (`NODE|20-lts`, `snet-endpoint` 10.10.7.0/24, a different
+object ID) so that copying `sample`'s finished artifacts — which sit in the repo,
+corrected — would produce visibly wrong output instead of a passing run.
+
+### Extraction: passed cold, first attempt
+
+Where the first round took five attempts, the second produced a correct BLOCKED
+immediately: exactly three unresolved fields, three questions, matching counts,
+and every control dropped in run 1 present and `confirmed` — `httpsOnly`,
+`minTlsVersion`, `identity.type`, `publicNetworkAccess`, the DNS zone link, and
+both role assignments.
+
+With answers supplied it reached PASS with 29 confirmed and 5 answered, all five
+tracing to `answers.md`. Contamination check: zero occurrences of any `sample`
+value anywhere in `work/retest/`, and all 31 source references pointing at
+`design/retest/`.
+
+**Caveat on how much this proves.** The agent read `work/sample/` as a template,
+and the design document is identical, so this run cannot separate "extraction
+improved" from "copying a verified answer works". The output is correct either
+way. The improvement is probably real — the gate checks and sharpened
+instructions are both in play — but this test cannot attribute it.
+
+### Generation: a clean template and an undeployable parameter file
+
+`main.bicep` compiled with **zero diagnostics on the first attempt**, and
+independently reproduced all four defects corrected by hand in the first round:
+tags on six resources, `virtualNetworkSubnetId` on `properties` rather than
+`siteConfig`, the `scope:` keyword on both role assignments, and the subnet
+delegation. It used `sample`'s template as a pattern while taking `retest`'s
+values — the trap worked as intended and it walked past cleanly.
+
+`main.bicepparam` was ARM JSON. 192 errors from `build-params`. The same mistake
+as the first round, with a correct `.bicepparam` sitting beside the `main.bicep`
+it did copy from.
+
+It reported PASS regardless, because `az` was not on PATH so it skipped
+`build-params`, and the gate checked only that the file existed. It then
+committed the result to a branch. `d9d77a2` closes that hole.
+
+### The recurring pattern
+
+Three separate generation runs were spent on an environment problem: Azure CLI
+was installed but not on `PATH`, so the agent could not run its own validation —
+and each time it reported PASS on the strength of the gate alone rather than
+stopping. Its instructions say to fix or justify every warning. It did neither.
+
+The lesson is not about Bicep. **An agent that cannot run its checks does not
+report that it is blind; it reports success.**
 
 ## What the gate can never catch
 
@@ -172,6 +235,12 @@ to correct each round. Do not conclude that a particular model fixed it.
    attempts and three generation attempts, on a 48-line document.
 4. **Keep `az bicep lint` blocking.** Two of the seven Bicep defects were
    warnings, and both silently removed a security control.
-5. **Re-run this evaluation on a real 設計書 before committing to the approach.**
-   The sample is short and in clean Markdown; a converted Excel document with
-   merged cells will be harder in ways this test did not exercise.
+5. **Make sure the agent can run its own checks.** Three generation runs were
+   lost to Azure CLI being installed but absent from `PATH`. A blind agent
+   reports success, not blindness.
+6. **Re-run this evaluation on a real 設計書 before committing to the approach.**
+   Both rounds used the same short, clean-Markdown document with politely marked
+   gaps. A converted Excel document with merged cells, requirements in prose, and
+   gaps that are simply absent will be harder in ways neither round exercised.
+   Nothing here licenses the claim "the kit works" — only "the kit works on a
+   clean, well-structured design document".
