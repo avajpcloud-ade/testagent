@@ -1,0 +1,511 @@
+{
+  "schemaVersion": "1.0",
+  "project": "batch",
+  "target": {
+    "scope": {
+      "value": "resourceGroup",
+      "status": "confirmed",
+      "sources": [
+        "P-002"
+      ],
+      "normalizedFrom": "リソースグループ"
+    },
+    "subscriptionId": {
+      "value": "11111111-aaaa-bbbb-cccc-222222222222",
+      "status": "confirmed",
+      "sources": [
+        "P-001"
+      ]
+    },
+    "resourceGroup": {
+      "value": "rg-batch-agg-dev",
+      "status": "confirmed",
+      "sources": [
+        "P-003"
+      ]
+    },
+    "location": {
+      "value": "japanwest",
+      "status": "confirmed",
+      "sources": [
+        "P-004"
+      ],
+      "normalizedFrom": "西日本"
+    }
+  },
+  "tags": {
+    "env": {
+      "value": "dev",
+      "status": "confirmed",
+      "sources": [
+        "P-042"
+      ],
+      "normalizedFrom": "env=dev"
+    },
+    "system": {
+      "value": "batch-agg",
+      "status": "confirmed",
+      "sources": [
+        "P-043"
+      ],
+      "normalizedFrom": "system=batch-agg"
+    },
+    "costcenter": {
+      "value": "CC-4821",
+      "status": "confirmed",
+      "sources": [
+        "P-044"
+      ],
+      "normalizedFrom": "costcenter=CC-4821"
+    }
+  },
+  "resources": [
+    {
+      "id": "R-001",
+      "type": "Microsoft.Web/serverfarms",
+      "logicalName": "asp-batch-agg-dev",
+      "settings": {
+        "sku.name": {
+          "value": "EP1",
+          "status": "confirmed",
+          "sources": [
+            "P-006"
+          ],
+          "normalizedFrom": "Elastic Premium EP1"
+        },
+        "kind": {
+          "value": "linux",
+          "status": "confirmed",
+          "sources": [
+            "P-007"
+          ],
+          "normalizedFrom": "Linux"
+        }
+      }
+    },
+    {
+      "id": "R-002",
+      "type": "Microsoft.Web/sites",
+      "logicalName": "func-batch-agg-dev",
+      "settings": {
+        "serverFarmId": {
+          "value": "R-001",
+          "status": "confirmed",
+          "sources": [
+            "P-009"
+          ],
+          "normalizedFrom": "（No.1 のプランを使用）"
+        },
+        "properties.runtime": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "設計書に Function App ランタイムの明示がない"
+        },
+        "properties.httpsOnly": {
+          "value": true,
+          "status": "confirmed",
+          "sources": [
+            "P-025"
+          ],
+          "normalizedFrom": "有効"
+        },
+        "properties.minTlsVersion": {
+          "value": null,
+          "status": "conflict",
+          "sources": [
+            "P-026",
+            "P-046"
+          ],
+          "note": "セキュリティ表の 1.2 と 補足事項 4 の TLS 1.0 以上を許容する が相反"
+        },
+        "identity.type": {
+          "value": "SystemAssigned",
+          "status": "confirmed",
+          "sources": [
+            "P-027"
+          ],
+          "normalizedFrom": "システム割り当てを有効にする"
+        }
+      }
+    },
+    {
+      "id": "R-003",
+      "type": "Microsoft.Storage/storageAccounts",
+      "logicalName": "stbatchaggdev001",
+      "settings": {
+        "sku.name": {
+          "value": "Standard_GRS",
+          "status": "confirmed",
+          "sources": [
+            "P-011"
+          ],
+          "normalizedFrom": "Standard / GRS"
+        },
+        "kind": {
+          "value": "StorageV2",
+          "status": "confirmed",
+          "sources": [
+            "P-012"
+          ],
+          "normalizedFrom": "StorageV2"
+        },
+        "properties.minimumTlsVersion": {
+          "value": "TLS1_2",
+          "status": "confirmed",
+          "sources": [
+            "P-028"
+          ],
+          "normalizedFrom": "1.2"
+        },
+        "properties.allowBlobPublicAccess": {
+          "value": false,
+          "status": "confirmed",
+          "sources": [
+            "P-029"
+          ],
+          "normalizedFrom": "無効"
+        },
+        "properties.publicNetworkAccess": {
+          "value": "Disabled",
+          "status": "confirmed",
+          "sources": [
+            "P-033"
+          ],
+          "normalizedFrom": "無効"
+        }
+      }
+    },
+    {
+      "id": "R-004",
+      "type": "Microsoft.Sql/servers/databases",
+      "logicalName": "sqldb-batch-agg-dev",
+      "settings": {
+        "sku.name": {
+          "value": null,
+          "status": "ambiguous",
+          "sources": [
+            "P-014"
+          ],
+          "note": "Standard のみで SQL Database の階層が特定できない"
+        },
+        "properties.serverName": {
+          "value": "sqlsv-batch-agg-dev",
+          "status": "confirmed",
+          "sources": [
+            "P-015"
+          ],
+          "normalizedFrom": "sqlsv-batch-agg-dev"
+        },
+        "properties.publicNetworkAccess": {
+          "value": "Disabled",
+          "status": "confirmed",
+          "sources": [
+            "P-034"
+          ],
+          "normalizedFrom": "無効"
+        }
+      }
+    },
+    {
+      "id": "R-005",
+      "type": "Microsoft.KeyVault/vaults",
+      "logicalName": "kv-batch-agg-dev",
+      "settings": {
+        "sku.name": {
+          "value": "standard",
+          "status": "confirmed",
+          "sources": [
+            "P-017"
+          ],
+          "normalizedFrom": "Standard"
+        },
+        "properties.enableSoftDelete": {
+          "value": true,
+          "status": "confirmed",
+          "sources": [
+            "P-018"
+          ],
+          "normalizedFrom": "論理削除を有効にする"
+        },
+        "properties.enablePurgeProtection": {
+          "value": true,
+          "status": "confirmed",
+          "sources": [
+            "P-030"
+          ],
+          "normalizedFrom": "有効"
+        }
+      }
+    },
+    {
+      "id": "R-006",
+      "type": "Microsoft.Network/virtualNetworks",
+      "logicalName": "vnet-batch-agg-dev",
+      "settings": {
+        "properties.addressSpace.addressPrefixes": {
+          "value": [
+            "10.20.0.0/16"
+          ],
+          "status": "confirmed",
+          "sources": [
+            "P-020"
+          ]
+        },
+        "properties.subnets[0].name": {
+          "value": "snet-func",
+          "status": "confirmed",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.subnets[0].properties.addressPrefix": {
+          "value": "10.20.1.0/24",
+          "status": "confirmed",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.subnets[1].name": {
+          "value": "snet-data",
+          "status": "confirmed",
+          "sources": [
+            "P-022"
+          ]
+        },
+        "properties.subnets[1].properties.addressPrefix": {
+          "value": "10.20.2.0/24",
+          "status": "confirmed",
+          "sources": [
+            "P-022"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-007",
+      "type": "Microsoft.Network/privateEndpoints",
+      "logicalName": "pe-batch-blob",
+      "settings": {
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
+          "value": "R-003",
+          "status": "confirmed",
+          "sources": [
+            "P-023"
+          ],
+          "normalizedFrom": "No.3 ストレージアカウントの blob 用"
+        },
+        "properties.subnet.id": {
+          "value": "R-006:properties.subnets[1]",
+          "status": "confirmed",
+          "sources": [
+            "P-022",
+            "P-023"
+          ],
+          "note": "snet-data を配置先サブネットとして指定"
+        },
+        "properties.privateLinkServiceConnections[0].properties.groupIds": {
+          "value": [
+            "blob"
+          ],
+          "status": "confirmed",
+          "sources": [
+            "P-023"
+          ],
+          "normalizedFrom": "blob"
+        }
+      }
+    },
+    {
+      "id": "R-008",
+      "type": "Microsoft.Network/privateEndpoints",
+      "logicalName": "pe-batch-sql",
+      "settings": {
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
+          "value": "R-004",
+          "status": "confirmed",
+          "sources": [
+            "P-024"
+          ],
+          "normalizedFrom": "No.4 SQL Database 用"
+        },
+        "properties.subnet.id": {
+          "value": "R-006:properties.subnets[1]",
+          "status": "confirmed",
+          "sources": [
+            "P-022",
+            "P-024"
+          ],
+          "note": "snet-data を配置先サブネットとして指定"
+        },
+        "properties.privateLinkServiceConnections[0].properties.groupIds": {
+          "value": [
+            "sqlServer"
+          ],
+          "status": "confirmed",
+          "sources": [
+            "P-024"
+          ],
+          "normalizedFrom": "SQL Database"
+        }
+      }
+    },
+    {
+      "id": "R-009",
+      "type": "Microsoft.Network/privateDnsZones",
+      "logicalName": "privatelink.blob.core.windows.net",
+      "settings": {
+        "zoneName": {
+          "value": "privatelink.blob.core.windows.net",
+          "status": "confirmed",
+          "sources": [
+            "P-031"
+          ]
+        },
+        "links": {
+          "value": "R-006",
+          "status": "confirmed",
+          "sources": [
+            "P-020"
+          ],
+          "normalizedFrom": "No.6 の VNet"
+        }
+      }
+    },
+    {
+      "id": "R-010",
+      "type": "Microsoft.Network/privateDnsZones",
+      "logicalName": "privatelink.database.windows.net",
+      "settings": {
+        "zoneName": {
+          "value": "privatelink.database.windows.net",
+          "status": "confirmed",
+          "sources": [
+            "P-032"
+          ]
+        },
+        "links": {
+          "value": "R-006",
+          "status": "confirmed",
+          "sources": [
+            "P-020"
+          ],
+          "normalizedFrom": "No.6 の VNet"
+        }
+      }
+    },
+    {
+      "id": "R-011",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-storage-blob-contributor",
+      "settings": {
+        "properties.role": {
+          "value": "Storage Blob Data Contributor",
+          "status": "confirmed",
+          "sources": [
+            "P-035"
+          ],
+          "normalizedFrom": "ストレージ BLOB データ共同作成者"
+        },
+        "properties.principal": {
+          "value": "R-002:identity",
+          "status": "confirmed",
+          "sources": [
+            "P-027"
+          ],
+          "note": "Function App のシステム割り当てマネージド ID"
+        },
+        "properties.scope": {
+          "value": "R-003",
+          "status": "confirmed",
+          "sources": [
+            "P-036"
+          ],
+          "normalizedFrom": "No.3 ストレージアカウント"
+        }
+      }
+    },
+    {
+      "id": "R-012",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-kv-secrets-user",
+      "settings": {
+        "properties.role": {
+          "value": "Key Vault Secrets User",
+          "status": "confirmed",
+          "sources": [
+            "P-037"
+          ],
+          "normalizedFrom": "キー コンテナー シークレット ユーザー"
+        },
+        "properties.principal": {
+          "value": "R-002:identity",
+          "status": "confirmed",
+          "sources": [
+            "P-027"
+          ],
+          "note": "Function App のシステム割り当てマネージド ID"
+        },
+        "properties.scope": {
+          "value": "R-005",
+          "status": "confirmed",
+          "sources": [
+            "P-038"
+          ],
+          "normalizedFrom": "No.5 Key Vault"
+        }
+      }
+    },
+    {
+      "id": "R-013",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-rg-reader",
+      "settings": {
+        "properties.role": {
+          "value": "Reader",
+          "status": "confirmed",
+          "sources": [
+            "P-040"
+          ],
+          "normalizedFrom": "閲覧者"
+        },
+        "properties.principal": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "データ分析チームの Entra ID グループ object ID が記載なし"
+        },
+        "properties.scope": {
+          "value": "target:resourceGroup",
+          "status": "confirmed",
+          "sources": [
+            "P-041"
+          ],
+          "normalizedFrom": "リソースグループ"
+        }
+      }
+    },
+    {
+      "id": "R-014",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "logicalName": "law-batch-agg-dev",
+      "settings": {
+        "workspaceName": {
+          "value": "law-batch-agg-dev",
+          "status": "confirmed",
+          "sources": [
+            "P-045"
+          ]
+        },
+        "diagnosticSettings": {
+          "value": "Log Analytics",
+          "status": "confirmed",
+          "sources": [
+            "P-045"
+          ],
+          "normalizedFrom": "law-batch-agg-dev"
+        }
+      }
+    }
+  ]
+}

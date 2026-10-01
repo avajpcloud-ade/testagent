@@ -1,7 +1,8 @@
 # Agent2 evaluation
 
-Record of two end-to-end runs of this kit — `sample` (2026-09-11 to 09-12) and
-`retest` (09-14 to 09-18), both against the same design document. Written up because the reasoning behind the
+Record of three rounds: `sample` (2026-09-11 to 09-12) and `retest` (09-14 to
+09-18) against the same hand-written Markdown document, then `batch` (09-18)
+against a generated multi-sheet Excel document converted with `markitdown`. Written up because the reasoning behind the
 gate changes lives nowhere else, and the next person to touch this needs it.
 
 **Verdict: the pipeline works, and it is not a review-the-diff-and-merge tool.**
@@ -12,6 +13,11 @@ The second round is the more encouraging one: extraction reached a correct
 BLOCKED on the first attempt rather than the fifth, and generation produced a
 template with zero diagnostics. It still shipped an undeployable parameter file
 and called it PASS.
+
+The third round answers the question the first two could not: **it correctly
+understood a messy Excel design document** — a cross-sheet contradiction, an
+ambiguous SKU, an unlabelled empty cell, and requirements hidden in prose — and
+invented nothing. It left the traceability file empty.
 
 ## What was tested
 
@@ -210,6 +216,60 @@ three repository variables, the `production` environment) was not attempted. The
 subscription sits in a corporate Entra tenant, where creating an app registration
 is a directory change rather than a sandbox action. Nothing was deployed either —
 `what-if` creates no resources.
+
+## Third round — an Excel design document
+
+`design/batch/詳細設計書_batch-agg.xlsx` was generated to resemble a real 設計書:
+six sheets, merged header cells, a different system (Function App, SQL Database,
+Key Vault) so nothing could be copied from earlier rounds, and an answer key in
+`docs/batch-answer-key.md` written before the run and kept outside `design/`.
+
+### What conversion did to it
+
+`markitdown` produced the damage the README warns about. Merged headers became
+`Unnamed: 1` / `Unnamed: 3` columns; the genuine header row of the resource sheet
+slid into the data because the merged banner took its place; and **every empty
+cell became the string `NaN`** — including the Function App runtime, which is
+blank with no 未定 label anywhere.
+
+### Result: comprehension correct on every point in the key
+
+Exactly four unresolved fields, and the first statuses of their kinds in the
+whole evaluation:
+
+| Field | Status | Why it is right |
+|---|---|---|
+| Function App runtime | `missing` | Empty cell; `NaN` was never recorded as a value |
+| Data team object ID | `missing` | Named in RBAC, ID appears nowhere |
+| SQL Database SKU | `ambiguous` | 「Standard」 alone fits S0, S1, S2 … |
+| Function App minimum TLS | `conflict` | 1.2 on セキュリティ, 「TLS 1.0 以上」 in 補足事項 note 4 |
+
+Everything else in the key was present: all three tags including the prose-only
+`costcenter=CC-4821`; the Log Analytics workspace and diagnostic settings, also
+prose-only; 西日本 → `japanwest`; two subnets, two private endpoints with the
+correct `groupIds` (`blob`, `sqlServer`) both into `snet-data`, two DNS zones,
+three role assignments — 14 resources assembled from six sheets.
+
+**46 of 47 recorded quotes appear verbatim in the converted document.** The
+47th, `P-047`, quoted 「空欄」 — the agent describing a blank cell in its own words.
+It was also the one parameter the gate flagged as used nowhere.
+
+### What it did not finish
+
+`traceability.csv` contained a header and no rows. The two bookkeeping errors —
+the empty traceability file and the orphan `P-047` — were fixed by hand, not by
+the agent; the gate then reported the correct BLOCKED with zero errors.
+
+### What this does and does not show
+
+It shows the extraction step can read a realistically damaged Excel conversion
+and classify defects correctly — including the two statuses neither earlier
+round exercised. It does not show the same for a real client document: this one
+was written by someone who knew where every trap was.
+
+Across all three rounds the pattern holds. **Every failure has been an artifact
+left incomplete. None has been a misreading, and none has been an invented
+value.**
 
 ## What the gate can never catch
 

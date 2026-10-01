@@ -1,0 +1,473 @@
+{
+  "schemaVersion": "1.0",
+  "project": "batch",
+  "sourceDocuments": [
+    {
+      "path": "design/batch/detailed-design.md",
+      "sha256": "38304a683cc484bdf144b683b900aa813a7d82cf9ad8357bb0c2a1c73c0b9483",
+      "role": "design"
+    }
+  ],
+  "parameters": [
+    {
+      "id": "P-001",
+      "label": "subscriptionId",
+      "rawValue": "11111111-aaaa-bbbb-cccc-222222222222",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "表紙 > サブスクリプションID"
+      },
+      "quote": "11111111-aaaa-bbbb-cccc-222222222222"
+    },
+    {
+      "id": "P-002",
+      "label": "deployScope",
+      "rawValue": "リソースグループ",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "表紙 > デプロイスコープ"
+      },
+      "quote": "リソースグループ"
+    },
+    {
+      "id": "P-003",
+      "label": "resourceGroupName",
+      "rawValue": "rg-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "表紙 > リソースグループ名"
+      },
+      "quote": "rg-batch-agg-dev"
+    },
+    {
+      "id": "P-004",
+      "label": "location",
+      "rawValue": "西日本",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "表紙 > リージョン"
+      },
+      "quote": "西日本"
+    },
+    {
+      "id": "P-005",
+      "label": "R-001.name",
+      "rawValue": "asp-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.1 > リソース名"
+      },
+      "quote": "asp-batch-agg-dev"
+    },
+    {
+      "id": "P-006",
+      "label": "R-001.sku",
+      "rawValue": "Elastic Premium EP1",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.1 > SKU / プラン"
+      },
+      "quote": "Elastic Premium EP1"
+    },
+    {
+      "id": "P-007",
+      "label": "R-001.os",
+      "rawValue": "Linux",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.1 > 備考"
+      },
+      "quote": "OS: Linux"
+    },
+    {
+      "id": "P-008",
+      "label": "R-002.name",
+      "rawValue": "func-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.2 > リソース名"
+      },
+      "quote": "func-batch-agg-dev"
+    },
+    {
+      "id": "P-009",
+      "label": "R-002.planRef",
+      "rawValue": "（No.1 のプランを使用）",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.2 > SKU / プラン"
+      },
+      "quote": "（No.1 のプランを使用）"
+    },
+    {
+      "id": "P-010",
+      "label": "R-003.name",
+      "rawValue": "stbatchaggdev001",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.3 > リソース名"
+      },
+      "quote": "stbatchaggdev001"
+    },
+    {
+      "id": "P-011",
+      "label": "R-003.sku",
+      "rawValue": "Standard / GRS",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.3 > SKU / プラン"
+      },
+      "quote": "Standard / GRS"
+    },
+    {
+      "id": "P-012",
+      "label": "R-003.kind",
+      "rawValue": "StorageV2",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.3 > 備考"
+      },
+      "quote": "種類: StorageV2"
+    },
+    {
+      "id": "P-013",
+      "label": "R-004.name",
+      "rawValue": "sqldb-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.4 > リソース名"
+      },
+      "quote": "sqldb-batch-agg-dev"
+    },
+    {
+      "id": "P-014",
+      "label": "R-004.sku",
+      "rawValue": "Standard",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.4 > SKU / プラン"
+      },
+      "quote": "Standard"
+    },
+    {
+      "id": "P-015",
+      "label": "R-004.server",
+      "rawValue": "sqlsv-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.4 > 備考"
+      },
+      "quote": "サーバー: sqlsv-batch-agg-dev"
+    },
+    {
+      "id": "P-016",
+      "label": "R-005.name",
+      "rawValue": "kv-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.5 > リソース名"
+      },
+      "quote": "kv-batch-agg-dev"
+    },
+    {
+      "id": "P-017",
+      "label": "R-005.sku",
+      "rawValue": "Standard",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.5 > SKU / プラン"
+      },
+      "quote": "Standard"
+    },
+    {
+      "id": "P-018",
+      "label": "R-005.softDelete",
+      "rawValue": "論理削除を有効にする",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.5 > 備考"
+      },
+      "quote": "論理削除を有効にする"
+    },
+    {
+      "id": "P-019",
+      "label": "R-006.name",
+      "rawValue": "vnet-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.6 > リソース名"
+      },
+      "quote": "vnet-batch-agg-dev"
+    },
+    {
+      "id": "P-020",
+      "label": "R-006.addressSpace",
+      "rawValue": "10.20.0.0/16",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "2. リソース一覧 > No.6 > 備考"
+      },
+      "quote": "アドレス空間 10.20.0.0/16"
+    },
+    {
+      "id": "P-021",
+      "label": "subnet.func",
+      "rawValue": "snet-func（10.20.1.0/24）",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > サブネット 1"
+      },
+      "quote": "snet-func（10.20.1.0/24）: Function App の VNet 統合に使用する。"
+    },
+    {
+      "id": "P-022",
+      "label": "subnet.data",
+      "rawValue": "snet-data（10.20.2.0/24）",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > サブネット 2"
+      },
+      "quote": "snet-data（10.20.2.0/24）: プライベートエンドポイント専用。"
+    },
+    {
+      "id": "P-023",
+      "label": "pe.storage.target",
+      "rawValue": "No.3 ストレージアカウントの blob 用",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > プライベートエンドポイント 1"
+      },
+      "quote": "No.3 ストレージアカウントの blob 用に作成し、snet-data に配置する。"
+    },
+    {
+      "id": "P-024",
+      "label": "pe.sql.target",
+      "rawValue": "No.4 SQL Database 用",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > プライベートエンドポイント 2"
+      },
+      "quote": "No.4 SQL Database 用にも作成する。配置先サブネットは snet-data。"
+    },
+    {
+      "id": "P-025",
+      "label": "functionApp.httpsOnly",
+      "rawValue": "有効",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > Function App / HTTPS のみ"
+      },
+      "quote": "有効"
+    },
+    {
+      "id": "P-026",
+      "label": "functionApp.minTlsVersion",
+      "rawValue": "1.2",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > Function App / 最小 TLS バージョン"
+      },
+      "quote": "1.2"
+    },
+    {
+      "id": "P-027",
+      "label": "functionApp.managedIdentity",
+      "rawValue": "システム割り当てを有効にする",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > Function App / マネージド ID"
+      },
+      "quote": "システム割り当てを有効にする"
+    },
+    {
+      "id": "P-028",
+      "label": "storage.minTlsVersion",
+      "rawValue": "1.2",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > ストレージアカウント / 最小 TLS バージョン"
+      },
+      "quote": "1.2"
+    },
+    {
+      "id": "P-029",
+      "label": "storage.allowBlobPublicAccess",
+      "rawValue": "無効",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > ストレージアカウント / BLOB 匿名アクセス"
+      },
+      "quote": "無効"
+    },
+    {
+      "id": "P-030",
+      "label": "keyVault.purgeProtection",
+      "rawValue": "有効",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "4. セキュリティ > Key Vault / パージ保護"
+      },
+      "quote": "有効"
+    },
+    {
+      "id": "P-031",
+      "label": "privateDns.blob",
+      "rawValue": "privatelink.blob.core.windows.net",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > プライベート DNS 1"
+      },
+      "quote": "privatelink.blob.core.windows.net"
+    },
+    {
+      "id": "P-032",
+      "label": "privateDns.sql",
+      "rawValue": "privatelink.database.windows.net",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > プライベート DNS 2"
+      },
+      "quote": "privatelink.database.windows.net"
+    },
+    {
+      "id": "P-033",
+      "label": "publicNetworkAccess.storage",
+      "rawValue": "無効",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > パブリックアクセス / Storage"
+      },
+      "quote": "ストレージアカウントおよび SQL Database へのパブリックネットワークアクセスは無効とする。"
+    },
+    {
+      "id": "P-034",
+      "label": "publicNetworkAccess.sql",
+      "rawValue": "無効",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > パブリックアクセス / SQL"
+      },
+      "quote": "ストレージアカウントおよび SQL Database へのパブリックネットワークアクセスは無効とする。"
+    },
+    {
+      "id": "P-035",
+      "label": "rbac.func.storage.role",
+      "rawValue": "ストレージ BLOB データ共同作成者",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 1 / ロール"
+      },
+      "quote": "ストレージ BLOB データ共同作成者"
+    },
+    {
+      "id": "P-036",
+      "label": "rbac.func.storage.scope",
+      "rawValue": "No.3 ストレージアカウント",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 1 / スコープ"
+      },
+      "quote": "No.3 ストレージアカウント"
+    },
+    {
+      "id": "P-037",
+      "label": "rbac.func.kv.role",
+      "rawValue": "キー コンテナー シークレット ユーザー",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 2 / ロール"
+      },
+      "quote": "キー コンテナー シークレット ユーザー"
+    },
+    {
+      "id": "P-038",
+      "label": "rbac.func.kv.scope",
+      "rawValue": "No.5 Key Vault",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 2 / スコープ"
+      },
+      "quote": "No.5 Key Vault"
+    },
+    {
+      "id": "P-039",
+      "label": "rbac.group.name",
+      "rawValue": "データ分析チーム（Entra ID グループ）",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 3 / 対象"
+      },
+      "quote": "データ分析チーム（Entra ID グループ）"
+    },
+    {
+      "id": "P-040",
+      "label": "rbac.group.role",
+      "rawValue": "閲覧者",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 3 / ロール"
+      },
+      "quote": "閲覧者"
+    },
+    {
+      "id": "P-041",
+      "label": "rbac.group.scope",
+      "rawValue": "リソースグループ",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "5. RBAC > row 3 / スコープ"
+      },
+      "quote": "リソースグループ"
+    },
+    {
+      "id": "P-042",
+      "label": "tags.env",
+      "rawValue": "env=dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 2"
+      },
+      "quote": "env=dev"
+    },
+    {
+      "id": "P-043",
+      "label": "tags.system",
+      "rawValue": "system=batch-agg",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 2"
+      },
+      "quote": "system=batch-agg"
+    },
+    {
+      "id": "P-044",
+      "label": "tags.costcenter",
+      "rawValue": "costcenter=CC-4821",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 2"
+      },
+      "quote": "costcenter=CC-4821"
+    },
+    {
+      "id": "P-045",
+      "label": "diagnosticWorkspace",
+      "rawValue": "law-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 3"
+      },
+      "quote": "law-batch-agg-dev"
+    },
+    {
+      "id": "P-046",
+      "label": "tls.note",
+      "rawValue": "TLS 1.0 以上を許容する",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 4"
+      },
+      "quote": "通信は TLS 1.0 以上を許容する。"
+    }
+  ]
+}

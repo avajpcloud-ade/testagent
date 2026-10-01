@@ -1,0 +1,440 @@
+{
+  "schemaVersion": "1.0",
+  "project": "batch",
+  "target": {
+    "scope": {
+      "raw": "リソースグループ",
+      "sources": [
+        "P-002"
+      ]
+    },
+    "subscriptionId": {
+      "raw": "11111111-aaaa-bbbb-cccc-222222222222",
+      "sources": [
+        "P-001"
+      ]
+    },
+    "resourceGroup": {
+      "raw": "rg-batch-agg-dev",
+      "sources": [
+        "P-003"
+      ]
+    },
+    "location": {
+      "raw": "西日本",
+      "sources": [
+        "P-004"
+      ]
+    }
+  },
+  "tags": {
+    "env": {
+      "raw": "env=dev",
+      "sources": [
+        "P-042"
+      ]
+    },
+    "system": {
+      "raw": "system=batch-agg",
+      "sources": [
+        "P-043"
+      ]
+    },
+    "costcenter": {
+      "raw": "costcenter=CC-4821",
+      "sources": [
+        "P-044"
+      ]
+    }
+  },
+  "resources": [
+    {
+      "id": "R-001",
+      "type": "Microsoft.Web/serverfarms",
+      "logicalName": "asp-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.1",
+      "settings": {
+        "sku.name": {
+          "raw": "Elastic Premium EP1",
+          "sources": [
+            "P-006"
+          ]
+        },
+        "kind": {
+          "raw": "Linux",
+          "sources": [
+            "P-007"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-002",
+      "type": "Microsoft.Web/sites",
+      "logicalName": "func-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.2",
+      "dependsOn": [
+        "R-001"
+      ],
+      "settings": {
+        "serverFarmId": {
+          "raw": "（No.1 のプランを使用）",
+          "sources": [
+            "P-009"
+          ]
+        },
+        "properties.runtime": {
+          "raw": null,
+          "sources": []
+        },
+        "properties.httpsOnly": {
+          "raw": "有効",
+          "sources": [
+            "P-025"
+          ]
+        },
+        "properties.minTlsVersion": {
+          "raw": "1.2",
+          "sources": [
+            "P-026",
+            "P-046"
+          ]
+        },
+        "identity.type": {
+          "raw": "システム割り当てを有効にする",
+          "sources": [
+            "P-027"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-003",
+      "type": "Microsoft.Storage/storageAccounts",
+      "logicalName": "stbatchaggdev001",
+      "designRef": "2. リソース一覧 > No.3",
+      "settings": {
+        "sku.name": {
+          "raw": "Standard / GRS",
+          "sources": [
+            "P-011"
+          ]
+        },
+        "kind": {
+          "raw": "StorageV2",
+          "sources": [
+            "P-012"
+          ]
+        },
+        "properties.minimumTlsVersion": {
+          "raw": "1.2",
+          "sources": [
+            "P-028"
+          ]
+        },
+        "properties.allowBlobPublicAccess": {
+          "raw": "無効",
+          "sources": [
+            "P-029"
+          ]
+        },
+        "properties.publicNetworkAccess": {
+          "raw": "無効",
+          "sources": [
+            "P-033"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-004",
+      "type": "Microsoft.Sql/servers/databases",
+      "logicalName": "sqldb-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.4",
+      "settings": {
+        "sku.name": {
+          "raw": "Standard",
+          "sources": [
+            "P-014"
+          ]
+        },
+        "properties.serverName": {
+          "raw": "sqlsv-batch-agg-dev",
+          "sources": [
+            "P-015"
+          ]
+        },
+        "properties.publicNetworkAccess": {
+          "raw": "無効",
+          "sources": [
+            "P-034"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-005",
+      "type": "Microsoft.KeyVault/vaults",
+      "logicalName": "kv-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.5",
+      "settings": {
+        "sku.name": {
+          "raw": "Standard",
+          "sources": [
+            "P-017"
+          ]
+        },
+        "properties.enableSoftDelete": {
+          "raw": "論理削除を有効にする",
+          "sources": [
+            "P-018"
+          ]
+        },
+        "properties.enablePurgeProtection": {
+          "raw": "有効",
+          "sources": [
+            "P-030"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-006",
+      "type": "Microsoft.Network/virtualNetworks",
+      "logicalName": "vnet-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.6",
+      "settings": {
+        "properties.addressSpace.addressPrefixes": {
+          "raw": "10.20.0.0/16",
+          "sources": [
+            "P-020"
+          ]
+        },
+        "properties.subnets[0].name": {
+          "raw": "snet-func",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.subnets[0].properties.addressPrefix": {
+          "raw": "10.20.1.0/24",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.subnets[1].name": {
+          "raw": "snet-data",
+          "sources": [
+            "P-022"
+          ]
+        },
+        "properties.subnets[1].properties.addressPrefix": {
+          "raw": "10.20.2.0/24",
+          "sources": [
+            "P-022"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-007",
+      "type": "Microsoft.Network/privateEndpoints",
+      "logicalName": "pe-batch-blob",
+      "designRef": "3. ネットワーク > プライベートエンドポイント 1",
+      "dependsOn": [
+        "R-003",
+        "R-006"
+      ],
+      "settings": {
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
+          "raw": "R-003",
+          "sources": [
+            "P-023"
+          ]
+        },
+        "properties.subnet.id": {
+          "raw": "R-006:properties.subnets[1]",
+          "sources": [
+            "P-022",
+            "P-023"
+          ]
+        },
+        "properties.privateLinkServiceConnections[0].properties.groupIds": {
+          "raw": "blob",
+          "sources": [
+            "P-023"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-008",
+      "type": "Microsoft.Network/privateEndpoints",
+      "logicalName": "pe-batch-sql",
+      "designRef": "3. ネットワーク > プライベートエンドポイント 2",
+      "dependsOn": [
+        "R-004",
+        "R-006"
+      ],
+      "settings": {
+        "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
+          "raw": "R-004",
+          "sources": [
+            "P-024"
+          ]
+        },
+        "properties.subnet.id": {
+          "raw": "R-006:properties.subnets[1]",
+          "sources": [
+            "P-022",
+            "P-024"
+          ]
+        },
+        "properties.privateLinkServiceConnections[0].properties.groupIds": {
+          "raw": "sqlServer",
+          "sources": [
+            "P-024"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-009",
+      "type": "Microsoft.Network/privateDnsZones",
+      "logicalName": "privatelink.blob.core.windows.net",
+      "designRef": "3. ネットワーク > プライベート DNS 1",
+      "settings": {
+        "zoneName": {
+          "raw": "privatelink.blob.core.windows.net",
+          "sources": [
+            "P-031"
+          ]
+        },
+        "links": {
+          "raw": "R-006",
+          "sources": [
+            "P-020"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-010",
+      "type": "Microsoft.Network/privateDnsZones",
+      "logicalName": "privatelink.database.windows.net",
+      "designRef": "3. ネットワーク > プライベート DNS 2",
+      "settings": {
+        "zoneName": {
+          "raw": "privatelink.database.windows.net",
+          "sources": [
+            "P-032"
+          ]
+        },
+        "links": {
+          "raw": "R-006",
+          "sources": [
+            "P-020"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-011",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-storage-blob-contributor",
+      "designRef": "5. RBAC > row 1",
+      "settings": {
+        "properties.role": {
+          "raw": "ストレージ BLOB データ共同作成者",
+          "sources": [
+            "P-035"
+          ]
+        },
+        "properties.principal": {
+          "raw": "R-002:identity",
+          "sources": [
+            "P-027"
+          ]
+        },
+        "properties.scope": {
+          "raw": "R-003",
+          "sources": [
+            "P-036"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-012",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-kv-secrets-user",
+      "designRef": "5. RBAC > row 2",
+      "settings": {
+        "properties.role": {
+          "raw": "キー コンテナー シークレット ユーザー",
+          "sources": [
+            "P-037"
+          ]
+        },
+        "properties.principal": {
+          "raw": "R-002:identity",
+          "sources": [
+            "P-027"
+          ]
+        },
+        "properties.scope": {
+          "raw": "R-005",
+          "sources": [
+            "P-038"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-013",
+      "type": "Microsoft.Authorization/roleAssignments",
+      "logicalName": "rbac-rg-reader",
+      "designRef": "5. RBAC > row 3",
+      "settings": {
+        "properties.role": {
+          "raw": "閲覧者",
+          "sources": [
+            "P-040"
+          ]
+        },
+        "properties.principal": {
+          "raw": "データ分析チーム（Entra ID グループ）",
+          "sources": [
+            "P-039"
+          ]
+        },
+        "properties.scope": {
+          "raw": "target:resourceGroup",
+          "sources": [
+            "P-041"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-014",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "logicalName": "law-batch-agg-dev",
+      "designRef": "6. 補足事項 > 3",
+      "settings": {
+        "workspaceName": {
+          "raw": "law-batch-agg-dev",
+          "sources": [
+            "P-045"
+          ]
+        },
+        "diagnosticSettings": {
+          "raw": "診断ログおよびメトリックを Log Analytics ワークスペース law-batch-agg-dev に送信すること",
+          "sources": [
+            "P-045"
+          ]
+        }
+      }
+    }
+  ]
+}
