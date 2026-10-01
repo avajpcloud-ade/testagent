@@ -118,8 +118,10 @@
           ]
         },
         "properties.siteConfig.appSettings.AzureWebJobsStorage": {
-          "raw": null,
-          "sources": []
+          "raw": "stbatchaggdev001",
+          "sources": [
+            "P-061"
+          ]
         },
         "identity.type": {
           "raw": "システム割り当てを有効にする",
@@ -269,7 +271,7 @@
     {
       "id": "R-007",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "（未記載）",
+      "logicalName": "pe-stbatchaggdev001-blob",
       "designRef": "3. ネットワーク > プライベートエンドポイント 1",
       "dependsOn": [
         "R-003",
@@ -277,8 +279,11 @@
       ],
       "settings": {
         "name": {
-          "raw": null,
-          "sources": []
+          "raw": "pe-<接続先リソース名>-<groupId>",
+          "sources": [
+            "P-055",
+            "P-010"
+          ]
         },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "raw": "R-003",
@@ -300,15 +305,19 @@
           ]
         },
         "properties.privateLinkServiceConnections[0].name": {
-          "raw": null,
-          "sources": []
+          "raw": "プライベートエンドポイント名と同一",
+          "sources": [
+            "P-056",
+            "P-055",
+            "P-010"
+          ]
         }
       }
     },
     {
       "id": "R-008",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "（未記載）",
+      "logicalName": "pe-sqlsv-batch-agg-dev-sqlServer",
       "designRef": "3. ネットワーク > プライベートエンドポイント 2",
       "dependsOn": [
         "R-015",
@@ -316,8 +325,11 @@
       ],
       "settings": {
         "name": {
-          "raw": null,
-          "sources": []
+          "raw": "pe-<接続先リソース名>-<groupId>",
+          "sources": [
+            "P-055",
+            "P-015"
+          ]
         },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "raw": "R-015",
@@ -339,8 +351,12 @@
           ]
         },
         "properties.privateLinkServiceConnections[0].name": {
-          "raw": null,
-          "sources": []
+          "raw": "プライベートエンドポイント名と同一",
+          "sources": [
+            "P-056",
+            "P-055",
+            "P-015"
+          ]
         }
       }
     },
@@ -458,8 +474,10 @@
       "designRef": "6. 補足事項 > 3",
       "settings": {
         "sku.name": {
-          "raw": null,
-          "sources": []
+          "raw": "PerGB2018",
+          "sources": [
+            "P-059"
+          ]
         }
       }
     },
@@ -470,107 +488,144 @@
       "designRef": "2. リソース一覧 > No.4 > 備考",
       "settings": {
         "properties.version": {
-          "raw": null,
-          "sources": []
-        },
-        "properties.administratorLogin": {
-          "raw": null,
-          "sources": []
-        },
-        "properties.administratorLoginPassword": {
-          "raw": null,
-          "sources": [],
-          "note": "Do not put secret values in repository artifacts; specify a secure external secret reference or an alternative authentication method."
+          "raw": "12.0",
+          "sources": [
+            "P-060"
+          ]
         },
         "properties.publicNetworkAccess": {
           "raw": "無効",
           "sources": [
             "P-034"
           ]
+        },
+        "properties.administrators.administratorType": {
+          "raw": "Entra ID 認証のみ",
+          "sources": [
+            "P-062",
+            "P-063"
+          ]
+        },
+        "properties.administrators.azureADOnlyAuthentication": {
+          "raw": "SQL 認証は使用しない",
+          "sources": [
+            "P-062",
+            "P-064"
+          ]
+        },
+        "properties.administrators.login": {
+          "raw": "基盤チーム（Entra ID グループ）",
+          "sources": [
+            "P-063"
+          ]
+        },
+        "properties.administrators.sid": {
+          "raw": "55555555-6666-7777-8888-999999999999",
+          "sources": [
+            "P-063"
+          ]
+        },
+        "properties.administrators.principalType": {
+          "raw": "Entra ID グループ",
+          "sources": [
+            "P-063"
+          ]
         }
       }
     },
     {
-        "id": "R-016",
-        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-        "logicalName": "（未記載）",
-        "designRef": "3. ネットワーク > プライベート DNS",
-        "dependsOn": [
-          "R-006",
-          "R-009"
-        ],
-        "settings": {
-          "name": {
-            "raw": null,
-            "sources": []
-          },
-          "properties.virtualNetwork.id": {
-            "raw": "R-006",
-            "sources": [
-              "P-053"
-            ]
-          }
+      "id": "R-016",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "logicalName": "link-vnet-batch-agg-dev",
+      "designRef": "3. ネットワーク > プライベート DNS",
+      "dependsOn": [
+        "R-006",
+        "R-009"
+      ],
+      "settings": {
+        "name": {
+          "raw": "link-<VNet 名>",
+          "sources": [
+            "P-057",
+            "P-019"
+          ]
+        },
+        "properties.virtualNetwork.id": {
+          "raw": "R-006",
+          "sources": [
+            "P-053"
+          ]
         }
-      },
-      {
-        "id": "R-017",
-        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-        "logicalName": "（未記載）",
-        "designRef": "3. ネットワーク > プライベート DNS",
-        "dependsOn": [
-          "R-006",
-          "R-010"
-        ],
-        "settings": {
-          "name": {
-            "raw": null,
-            "sources": []
-          },
-          "properties.virtualNetwork.id": {
-            "raw": "R-006",
-            "sources": [
-              "P-053"
-            ]
-          }
+      }
+    },
+    {
+      "id": "R-017",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "logicalName": "link-vnet-batch-agg-dev",
+      "designRef": "3. ネットワーク > プライベート DNS",
+      "dependsOn": [
+        "R-006",
+        "R-010"
+      ],
+      "settings": {
+        "name": {
+          "raw": "link-<VNet 名>",
+          "sources": [
+            "P-057",
+            "P-019"
+          ]
+        },
+        "properties.virtualNetwork.id": {
+          "raw": "R-006",
+          "sources": [
+            "P-053"
+          ]
         }
-      },
-      {
-        "id": "R-018",
-        "type": "Microsoft.Insights/diagnosticSettings",
-        "logicalName": "（未記載）",
-        "designRef": "6. 補足事項 > 3",
-        "dependsOn": [
-          "R-014"
-        ],
-        "settings": {
-          "name": {
-            "raw": null,
-            "sources": []
-          },
-          "scope": {
-            "raw": null,
-            "sources": []
-          },
-          "properties.workspaceId": {
-            "raw": "R-014",
-            "sources": [
-              "P-045",
-              "P-054"
-            ]
-          },
-          "properties.logs.categories": {
-            "raw": "診断ログ",
-            "sources": [
-              "P-054"
-            ]
-          },
-          "properties.metrics.categories": {
-            "raw": "メトリック",
-            "sources": [
-              "P-054"
-            ]
-            }
-          }
+      }
+    },
+    {
+      "id": "R-018",
+      "type": "Microsoft.Insights/diagnosticSettings",
+      "logicalName": "send-to-law",
+      "designRef": "6. 補足事項 > 3",
+      "dependsOn": [
+        "R-014"
+      ],
+      "settings": {
+        "name": {
+          "raw": "send-to-law",
+          "sources": [
+            "P-058"
+          ]
+        },
+        "scope": {
+          "raw": "No.2 Function App",
+          "sources": [
+            "P-065"
+          ]
+        },
+        "properties.workspaceId": {
+          "raw": "R-014",
+          "sources": [
+            "P-045",
+            "P-054"
+          ]
+        },
+        "properties.logs.categories": {
+          "raw": "allLogs",
+          "sources": [
+            "P-054",
+            "P-066"
+          ]
+        },
+        "properties.metrics.categories": {
+          "raw": "AllMetrics",
+          "sources": [
+            "P-054",
+            "P-067"
+          ]
         }
+      }
+    }
   ]
 }

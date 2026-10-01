@@ -143,10 +143,11 @@
           ]
         },
         "properties.siteConfig.appSettings.AzureWebJobsStorage": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Function host storage connection or identity-based configuration is not specified"
+          "value": "R-003",
+          "status": "answered",
+          "sources": [
+            "P-061"
+          ]
         },
         "identity.type": {
           "value": "SystemAssigned",
@@ -326,13 +327,15 @@
     {
       "id": "R-007",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "（未記載）",
+      "logicalName": "pe-stbatchaggdev001-blob",
       "settings": {
         "name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "プライベートエンドポイント名の記載なし"
+          "value": "pe-stbatchaggdev001-blob",
+          "status": "confirmed",
+          "sources": [
+            "P-055",
+            "P-010"
+          ]
         },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "value": "R-003",
@@ -362,23 +365,28 @@
           "normalizedFrom": "blob"
         },
         "properties.privateLinkServiceConnections[0].name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Private Link connection name の記載なし"
+          "value": "pe-stbatchaggdev001-blob",
+          "status": "confirmed",
+          "sources": [
+            "P-056",
+            "P-055",
+            "P-010"
+          ]
         }
       }
     },
     {
       "id": "R-008",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "（未記載）",
+      "logicalName": "pe-sqlsv-batch-agg-dev-sqlServer",
       "settings": {
         "name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "プライベートエンドポイント名の記載なし"
+          "value": "pe-sqlsv-batch-agg-dev-sqlServer",
+          "status": "confirmed",
+          "sources": [
+            "P-055",
+            "P-015"
+          ]
         },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "value": "R-015",
@@ -408,10 +416,13 @@
           "normalizedFrom": "SQL Database"
         },
         "properties.privateLinkServiceConnections[0].name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Private Link connection name の記載なし"
+          "value": "pe-sqlsv-batch-agg-dev-sqlServer",
+          "status": "confirmed",
+          "sources": [
+            "P-056",
+            "P-055",
+            "P-015"
+          ]
         }
       }
     },
@@ -543,10 +554,11 @@
       "logicalName": "law-batch-agg-dev",
       "settings": {
         "sku.name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Log Analytics workspace SKU の指定なし"
+          "value": "PerGB2018",
+          "status": "confirmed",
+          "sources": [
+            "P-059"
+          ]
         }
       }
     },
@@ -556,22 +568,11 @@
       "logicalName": "sqlsv-batch-agg-dev",
       "settings": {
         "properties.version": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "設計資料に SQL Server のバージョン指定なし"
-        },
-        "properties.administratorLogin": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "SQL Server の管理者認証方式とユーザー名が未記載"
-        },
-        "properties.administratorLoginPassword": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "SQL Server の管理者パスワードが未記載。シークレットをソースファイルに記載せず、外部シークレット参照方式の指定が必要"
+          "value": "12.0",
+          "status": "confirmed",
+          "sources": [
+            "P-060"
+          ]
         },
         "properties.publicNetworkAccess": {
           "value": "Disabled",
@@ -580,23 +581,62 @@
             "P-034"
           ],
           "normalizedFrom": "無効"
+        },
+        "properties.administrators.administratorType": {
+          "value": "ActiveDirectory",
+          "status": "answered",
+          "sources": [
+            "P-062",
+            "P-063"
+          ]
+        },
+        "properties.administrators.azureADOnlyAuthentication": {
+          "value": true,
+          "status": "answered",
+          "sources": [
+            "P-062",
+            "P-064"
+          ]
+        },
+        "properties.administrators.login": {
+          "value": "基盤チーム",
+          "status": "answered",
+          "sources": [
+            "P-063"
+          ]
+        },
+        "properties.administrators.sid": {
+          "value": "55555555-6666-7777-8888-999999999999",
+          "status": "answered",
+          "sources": [
+            "P-063"
+          ]
+        },
+        "properties.administrators.principalType": {
+          "value": "Group",
+          "status": "answered",
+          "sources": [
+            "P-063"
+          ]
         }
       }
     },
     {
       "id": "R-016",
       "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-      "logicalName": "（未記載）",
+      "logicalName": "link-vnet-batch-agg-dev",
       "dependsOn": [
         "R-006",
         "R-009"
       ],
       "settings": {
         "name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Private DNS zone VNet link 名の記載なし"
+          "value": "link-vnet-batch-agg-dev",
+          "status": "confirmed",
+          "sources": [
+            "P-057",
+            "P-019"
+          ]
         },
         "properties.virtualNetwork.id": {
           "value": "R-006",
@@ -610,17 +650,19 @@
     {
       "id": "R-017",
       "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-      "logicalName": "（未記載）",
+      "logicalName": "link-vnet-batch-agg-dev",
       "dependsOn": [
         "R-006",
         "R-010"
       ],
       "settings": {
         "name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Private DNS zone VNet link 名の記載なし"
+          "value": "link-vnet-batch-agg-dev",
+          "status": "confirmed",
+          "sources": [
+            "P-057",
+            "P-019"
+          ]
         },
         "properties.virtualNetwork.id": {
           "value": "R-006",
@@ -634,22 +676,24 @@
     {
       "id": "R-018",
       "type": "Microsoft.Insights/diagnosticSettings",
-      "logicalName": "（未記載）",
+      "logicalName": "send-to-law",
       "dependsOn": [
         "R-014"
       ],
       "settings": {
         "name": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "Diagnostic setting 名の記載なし"
+          "value": "send-to-law",
+          "status": "confirmed",
+          "sources": [
+            "P-058"
+          ]
         },
         "scope": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "診断設定の対象リソースが指定されていない"
+          "value": "R-002",
+          "status": "answered",
+          "sources": [
+            "P-065"
+          ]
         },
         "properties.workspaceId": {
           "value": "R-014",
@@ -660,20 +704,25 @@
           ]
         },
         "properties.logs.categories": {
-          "value": null,
-          "status": "ambiguous",
-          "sources": [
-            "P-054"
+          "value": [
+            "allLogs"
           ],
-          "note": "診断ログの送信は記載されているが、対象ログカテゴリが不明"
+          "status": "answered",
+          "sources": [
+            "P-054",
+            "P-066"
+          ],
+          "note": "categoryGroup"
         },
         "properties.metrics.categories": {
-          "value": null,
-          "status": "ambiguous",
-          "sources": [
-            "P-054"
+          "value": [
+            "AllMetrics"
           ],
-          "note": "メトリックの送信は記載されているが、対象カテゴリが不明"
+          "status": "answered",
+          "sources": [
+            "P-054",
+            "P-067"
+          ]
         }
       }
     }

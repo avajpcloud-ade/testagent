@@ -15,3 +15,22 @@ Function App の最小 TLS バージョンは **1.2** とする。
 
 ## Q-004
 Function App `func-batch-agg-dev` のランタイム: Python 3.12（`Python|3.12`）
+
+## Q-005
+Function App のホストストレージ（AzureWebJobsStorage）には No.3 ストレージアカウント `stbatchaggdev001` を使用する。
+
+## Q-012
+SQL Server は Entra ID 認証のみとし、SQL 認証（管理者ログイン・パスワード）は使用しない。
+Entra 管理者: 基盤チーム（Entra ID グループ）、オブジェクトID `55555555-6666-7777-8888-999999999999`
+
+## Q-013
+Q-012 のとおり SQL 認証は使用しないため、パスワードは設定しない。
+
+## Q-017
+診断設定の対象は No.2 Function App `func-batch-agg-dev` とする。
+
+## Q-018
+ログはカテゴリグループ `allLogs` を送信する。
+
+## Q-019
+メトリックは `AllMetrics` を送信する。

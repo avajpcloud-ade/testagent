@@ -9,8 +9,13 @@
     },
     {
       "path": "design/batch/answers.md",
-      "sha256": "ce20a37ae824e6a36f3e61b31aa46753f45198c2e4ea57b60bb03f3c63a7ec35",
+      "sha256": "b874a3f89c10c2195a0763c85e09f82b596f7d2eace5bae8a6b7c7e008fa92a5",
       "role": "answers"
+    },
+    {
+      "path": "design/batch/supplements/org-standards.md",
+      "sha256": "d76827c3610f1d0635ecff71e003296920da4a275793808f7366cc16499eeb37",
+      "role": "supplement"
     }
   ],
   "parameters": [
@@ -553,6 +558,136 @@
         "location": "6. 補足事項 > 3"
       },
       "quote": "診断ログおよびメトリックは Log Analytics ワークスペース law-batch-agg-dev に送信すること。"
+    },
+    {
+      "id": "P-055",
+      "label": "naming.privateEndpoint",
+      "rawValue": "pe-<接続先リソース名>-<groupId>",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "命名規則"
+      },
+      "quote": "プライベートエンドポイント: `pe-<接続先リソース名>-<groupId>`"
+    },
+    {
+      "id": "P-056",
+      "label": "naming.privateLinkConnection",
+      "rawValue": "プライベートエンドポイント名と同一",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "命名規則"
+      },
+      "quote": "プライベートリンク接続名: プライベートエンドポイント名と同一とする"
+    },
+    {
+      "id": "P-057",
+      "label": "naming.vnetLink",
+      "rawValue": "link-<VNet 名>",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "命名規則"
+      },
+      "quote": "プライベート DNS ゾーンの VNet リンク: `link-<VNet 名>`"
+    },
+    {
+      "id": "P-058",
+      "label": "naming.diagnosticSetting",
+      "rawValue": "send-to-law",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "命名規則"
+      },
+      "quote": "診断設定: `send-to-law`"
+    },
+    {
+      "id": "P-059",
+      "label": "default.logAnalyticsSku",
+      "rawValue": "PerGB2018",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "既定値"
+      },
+      "quote": "Log Analytics ワークスペースの価格レベル: `PerGB2018`"
+    },
+    {
+      "id": "P-060",
+      "label": "default.sqlServerVersion",
+      "rawValue": "12.0",
+      "sourceRef": {
+        "path": "design/batch/supplements/org-standards.md",
+        "location": "既定値"
+      },
+      "quote": "SQL Server のバージョン: `12.0`"
+    },
+    {
+      "id": "P-061",
+      "label": "functionHostStorage",
+      "rawValue": "stbatchaggdev001",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-005"
+      },
+      "quote": "Function App のホストストレージ（AzureWebJobsStorage）には No.3 ストレージアカウント `stbatchaggdev001` を使用する。"
+    },
+    {
+      "id": "P-062",
+      "label": "sql.authentication",
+      "rawValue": "Entra ID 認証のみ",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-012"
+      },
+      "quote": "SQL Server は Entra ID 認証のみとし、SQL 認証（管理者ログイン・パスワード）は使用しない。"
+    },
+    {
+      "id": "P-063",
+      "label": "sql.entraAdmin",
+      "rawValue": "基盤チーム（Entra ID グループ） 55555555-6666-7777-8888-999999999999",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-012"
+      },
+      "quote": "Entra 管理者: 基盤チーム（Entra ID グループ）、オブジェクトID `55555555-6666-7777-8888-999999999999`"
+    },
+    {
+      "id": "P-064",
+      "label": "sql.password",
+      "rawValue": "設定しない",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-013"
+      },
+      "quote": "Q-012 のとおり SQL 認証は使用しないため、パスワードは設定しない。"
+    },
+    {
+      "id": "P-065",
+      "label": "diagnostic.scope",
+      "rawValue": "No.2 Function App func-batch-agg-dev",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-017"
+      },
+      "quote": "診断設定の対象は No.2 Function App `func-batch-agg-dev` とする。"
+    },
+    {
+      "id": "P-066",
+      "label": "diagnostic.logs",
+      "rawValue": "allLogs",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-018"
+      },
+      "quote": "ログはカテゴリグループ `allLogs` を送信する。"
+    },
+    {
+      "id": "P-067",
+      "label": "diagnostic.metrics",
+      "rawValue": "AllMetrics",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "## Q-019"
+      },
+      "quote": "メトリックは `AllMetrics` を送信する。"
     }
   ]
 }
