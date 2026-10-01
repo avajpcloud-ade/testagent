@@ -87,6 +87,10 @@
       "id": "R-002",
       "type": "Microsoft.Web/sites",
       "logicalName": "func-batch-agg-dev",
+      "dependsOn": [
+        "R-001",
+        "R-006"
+      ],
       "settings": {
         "serverFarmId": {
           "value": "R-001",
@@ -97,10 +101,12 @@
           "normalizedFrom": "（No.1 のプランを使用）"
         },
         "properties.runtime": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "設計書に Function App ランタイムの明示がない"
+          "value": "Python|3.12",
+          "status": "answered",
+          "sources": [
+            "P-051"
+          ],
+          "normalizedFrom": "Python 3.12（`Python|3.12`）"
         },
         "properties.httpsOnly": {
           "value": true,
@@ -111,13 +117,36 @@
           "normalizedFrom": "有効"
         },
         "properties.minTlsVersion": {
-          "value": null,
-          "status": "conflict",
+          "value": "1.2",
+          "status": "answered",
           "sources": [
             "P-026",
-            "P-046"
+            "P-046",
+            "P-048",
+            "P-049"
           ],
-          "note": "セキュリティ表の 1.2 と 補足事項 4 の TLS 1.0 以上を許容する が相反"
+          "normalizedFrom": "1.2; answers.md Q-002 confirms 1.2 and corrects P-046"
+        },
+        "properties.siteConfig.alwaysOn": {
+          "value": false,
+          "status": "confirmed",
+          "sources": [
+            "P-052"
+          ],
+          "normalizedFrom": "常時接続は不要"
+        },
+        "properties.virtualNetworkSubnetId": {
+          "value": "R-006:properties.subnets[0]",
+          "status": "confirmed",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.siteConfig.appSettings.AzureWebJobsStorage": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Function host storage connection or identity-based configuration is not specified"
         },
         "identity.type": {
           "value": "SystemAssigned",
@@ -180,14 +209,18 @@
       "id": "R-004",
       "type": "Microsoft.Sql/servers/databases",
       "logicalName": "sqldb-batch-agg-dev",
+      "dependsOn": [
+        "R-015"
+      ],
       "settings": {
         "sku.name": {
-          "value": null,
-          "status": "ambiguous",
+          "value": "S1",
+          "status": "answered",
           "sources": [
-            "P-014"
+            "P-014",
+            "P-047"
           ],
-          "note": "Standard のみで SQL Database の階層が特定できない"
+          "normalizedFrom": "Standard S1（`S1`）"
         },
         "properties.serverName": {
           "value": "sqlsv-batch-agg-dev",
@@ -196,14 +229,6 @@
             "P-015"
           ],
           "normalizedFrom": "sqlsv-batch-agg-dev"
-        },
-        "properties.publicNetworkAccess": {
-          "value": "Disabled",
-          "status": "confirmed",
-          "sources": [
-            "P-034"
-          ],
-          "normalizedFrom": "無効"
         }
       }
     },
@@ -235,6 +260,14 @@
             "P-030"
           ],
           "normalizedFrom": "有効"
+        },
+        "properties.enableRbacAuthorization": {
+          "value": true,
+          "status": "confirmed",
+          "sources": [
+            "P-037"
+          ],
+          "note": "derived: platform requirement"
         }
       }
     },
@@ -266,6 +299,14 @@
             "P-021"
           ]
         },
+        "properties.subnets[0].properties.delegations[0].properties.serviceName": {
+          "value": "Microsoft.Web/serverFarms",
+          "status": "confirmed",
+          "sources": [
+            "P-021"
+          ],
+          "note": "derived: platform requirement"
+        },
         "properties.subnets[1].name": {
           "value": "snet-data",
           "status": "confirmed",
@@ -285,8 +326,14 @@
     {
       "id": "R-007",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "pe-batch-blob",
+      "logicalName": "（未記載）",
       "settings": {
+        "name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "プライベートエンドポイント名の記載なし"
+        },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "value": "R-003",
           "status": "confirmed",
@@ -313,16 +360,28 @@
             "P-023"
           ],
           "normalizedFrom": "blob"
+        },
+        "properties.privateLinkServiceConnections[0].name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Private Link connection name の記載なし"
         }
       }
     },
     {
       "id": "R-008",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "pe-batch-sql",
+      "logicalName": "（未記載）",
       "settings": {
+        "name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "プライベートエンドポイント名の記載なし"
+        },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
-          "value": "R-004",
+          "value": "R-015",
           "status": "confirmed",
           "sources": [
             "P-024"
@@ -347,6 +406,12 @@
             "P-024"
           ],
           "normalizedFrom": "SQL Database"
+        },
+        "properties.privateLinkServiceConnections[0].name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Private Link connection name の記載なし"
         }
       }
     },
@@ -361,14 +426,6 @@
           "sources": [
             "P-031"
           ]
-        },
-        "links": {
-          "value": "R-006",
-          "status": "confirmed",
-          "sources": [
-            "P-020"
-          ],
-          "normalizedFrom": "No.6 の VNet"
         }
       }
     },
@@ -383,14 +440,6 @@
           "sources": [
             "P-032"
           ]
-        },
-        "links": {
-          "value": "R-006",
-          "status": "confirmed",
-          "sources": [
-            "P-020"
-          ],
-          "normalizedFrom": "No.6 の VNet"
         }
       }
     },
@@ -470,10 +519,13 @@
           "normalizedFrom": "閲覧者"
         },
         "properties.principal": {
-          "value": null,
-          "status": "missing",
-          "sources": [],
-          "note": "データ分析チームの Entra ID グループ object ID が記載なし"
+          "value": "44444444-5555-6666-7777-888888888888",
+          "status": "answered",
+          "sources": [
+            "P-039",
+            "P-050"
+          ],
+          "normalizedFrom": "データ分析チーム（Entra ID グループ）のオブジェクトID"
         },
         "properties.scope": {
           "value": "target:resourceGroup",
@@ -490,20 +542,138 @@
       "type": "Microsoft.OperationalInsights/workspaces",
       "logicalName": "law-batch-agg-dev",
       "settings": {
-        "workspaceName": {
-          "value": "law-batch-agg-dev",
+        "sku.name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Log Analytics workspace SKU の指定なし"
+        }
+      }
+    },
+    {
+      "id": "R-015",
+      "type": "Microsoft.Sql/servers",
+      "logicalName": "sqlsv-batch-agg-dev",
+      "settings": {
+        "properties.version": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "設計資料に SQL Server のバージョン指定なし"
+        },
+        "properties.administratorLogin": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "SQL Server の管理者認証方式とユーザー名が未記載"
+        },
+        "properties.administratorLoginPassword": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "SQL Server の管理者パスワードが未記載。シークレットをソースファイルに記載せず、外部シークレット参照方式の指定が必要"
+        },
+        "properties.publicNetworkAccess": {
+          "value": "Disabled",
           "status": "confirmed",
           "sources": [
-            "P-045"
+            "P-034"
+          ],
+          "normalizedFrom": "無効"
+        }
+      }
+    },
+    {
+      "id": "R-016",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "logicalName": "（未記載）",
+      "dependsOn": [
+        "R-006",
+        "R-009"
+      ],
+      "settings": {
+        "name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Private DNS zone VNet link 名の記載なし"
+        },
+        "properties.virtualNetwork.id": {
+          "value": "R-006",
+          "status": "confirmed",
+          "sources": [
+            "P-053"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-017",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "logicalName": "（未記載）",
+      "dependsOn": [
+        "R-006",
+        "R-010"
+      ],
+      "settings": {
+        "name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Private DNS zone VNet link 名の記載なし"
+        },
+        "properties.virtualNetwork.id": {
+          "value": "R-006",
+          "status": "confirmed",
+          "sources": [
+            "P-053"
+          ]
+        }
+      }
+    },
+    {
+      "id": "R-018",
+      "type": "Microsoft.Insights/diagnosticSettings",
+      "logicalName": "（未記載）",
+      "dependsOn": [
+        "R-014"
+      ],
+      "settings": {
+        "name": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "Diagnostic setting 名の記載なし"
+        },
+        "scope": {
+          "value": null,
+          "status": "missing",
+          "sources": [],
+          "note": "診断設定の対象リソースが指定されていない"
+        },
+        "properties.workspaceId": {
+          "value": "R-014",
+          "status": "confirmed",
+          "sources": [
+            "P-045",
+            "P-054"
           ]
         },
-        "diagnosticSettings": {
-          "value": "Log Analytics",
-          "status": "confirmed",
+        "properties.logs.categories": {
+          "value": null,
+          "status": "ambiguous",
           "sources": [
-            "P-045"
+            "P-054"
           ],
-          "normalizedFrom": "law-batch-agg-dev"
+          "note": "診断ログの送信は記載されているが、対象ログカテゴリが不明"
+        },
+        "properties.metrics.categories": {
+          "value": null,
+          "status": "ambiguous",
+          "sources": [
+            "P-054"
+          ],
+          "note": "メトリックの送信は記載されているが、対象カテゴリが不明"
         }
       }
     }

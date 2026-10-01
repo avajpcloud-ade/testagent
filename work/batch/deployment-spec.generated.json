@@ -74,7 +74,8 @@
       "logicalName": "func-batch-agg-dev",
       "designRef": "2. リソース一覧 > No.2",
       "dependsOn": [
-        "R-001"
+        "R-001",
+        "R-006"
       ],
       "settings": {
         "serverFarmId": {
@@ -84,8 +85,10 @@
           ]
         },
         "properties.runtime": {
-          "raw": null,
-          "sources": []
+          "raw": "Python 3.12（`Python|3.12`）",
+          "sources": [
+            "P-051"
+          ]
         },
         "properties.httpsOnly": {
           "raw": "有効",
@@ -97,8 +100,26 @@
           "raw": "1.2",
           "sources": [
             "P-026",
-            "P-046"
+            "P-046",
+            "P-048",
+            "P-049"
           ]
+        },
+        "properties.siteConfig.alwaysOn": {
+          "raw": "Function App の常時接続は不要とする。",
+          "sources": [
+            "P-052"
+          ]
+        },
+        "properties.virtualNetworkSubnetId": {
+          "raw": "R-006:properties.subnets[0]",
+          "sources": [
+            "P-021"
+          ]
+        },
+        "properties.siteConfig.appSettings.AzureWebJobsStorage": {
+          "raw": null,
+          "sources": []
         },
         "identity.type": {
           "raw": "システム割り当てを有効にする",
@@ -153,21 +174,16 @@
       "designRef": "2. リソース一覧 > No.4",
       "settings": {
         "sku.name": {
-          "raw": "Standard",
+          "raw": "Standard S1（`S1`）",
           "sources": [
-            "P-014"
+            "P-014",
+            "P-047"
           ]
         },
         "properties.serverName": {
           "raw": "sqlsv-batch-agg-dev",
           "sources": [
             "P-015"
-          ]
-        },
-        "properties.publicNetworkAccess": {
-          "raw": "無効",
-          "sources": [
-            "P-034"
           ]
         }
       }
@@ -195,6 +211,13 @@
           "sources": [
             "P-030"
           ]
+        },
+        "properties.enableRbacAuthorization": {
+          "raw": "true",
+          "sources": [
+            "P-037"
+          ],
+          "note": "derived: platform requirement"
         }
       }
     },
@@ -222,6 +245,13 @@
             "P-021"
           ]
         },
+        "properties.subnets[0].properties.delegations[0].properties.serviceName": {
+          "raw": "Microsoft.Web/serverFarms",
+          "sources": [
+            "P-021"
+          ],
+          "note": "derived: platform requirement"
+        },
         "properties.subnets[1].name": {
           "raw": "snet-data",
           "sources": [
@@ -239,13 +269,17 @@
     {
       "id": "R-007",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "pe-batch-blob",
+      "logicalName": "（未記載）",
       "designRef": "3. ネットワーク > プライベートエンドポイント 1",
       "dependsOn": [
         "R-003",
         "R-006"
       ],
       "settings": {
+        "name": {
+          "raw": null,
+          "sources": []
+        },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
           "raw": "R-003",
           "sources": [
@@ -264,21 +298,29 @@
           "sources": [
             "P-023"
           ]
+        },
+        "properties.privateLinkServiceConnections[0].name": {
+          "raw": null,
+          "sources": []
         }
       }
     },
     {
       "id": "R-008",
       "type": "Microsoft.Network/privateEndpoints",
-      "logicalName": "pe-batch-sql",
+      "logicalName": "（未記載）",
       "designRef": "3. ネットワーク > プライベートエンドポイント 2",
       "dependsOn": [
-        "R-004",
+        "R-015",
         "R-006"
       ],
       "settings": {
+        "name": {
+          "raw": null,
+          "sources": []
+        },
         "properties.privateLinkServiceConnections[0].properties.privateLinkServiceId": {
-          "raw": "R-004",
+          "raw": "R-015",
           "sources": [
             "P-024"
           ]
@@ -295,6 +337,10 @@
           "sources": [
             "P-024"
           ]
+        },
+        "properties.privateLinkServiceConnections[0].name": {
+          "raw": null,
+          "sources": []
         }
       }
     },
@@ -309,12 +355,6 @@
           "sources": [
             "P-031"
           ]
-        },
-        "links": {
-          "raw": "R-006",
-          "sources": [
-            "P-020"
-          ]
         }
       }
     },
@@ -328,12 +368,6 @@
           "raw": "privatelink.database.windows.net",
           "sources": [
             "P-032"
-          ]
-        },
-        "links": {
-          "raw": "R-006",
-          "sources": [
-            "P-020"
           ]
         }
       }
@@ -403,9 +437,10 @@
           ]
         },
         "properties.principal": {
-          "raw": "データ分析チーム（Entra ID グループ）",
+          "raw": "44444444-5555-6666-7777-888888888888",
           "sources": [
-            "P-039"
+            "P-039",
+            "P-050"
           ]
         },
         "properties.scope": {
@@ -422,19 +457,120 @@
       "logicalName": "law-batch-agg-dev",
       "designRef": "6. 補足事項 > 3",
       "settings": {
-        "workspaceName": {
-          "raw": "law-batch-agg-dev",
-          "sources": [
-            "P-045"
-          ]
+        "sku.name": {
+          "raw": null,
+          "sources": []
+        }
+      }
+    },
+    {
+      "id": "R-015",
+      "type": "Microsoft.Sql/servers",
+      "logicalName": "sqlsv-batch-agg-dev",
+      "designRef": "2. リソース一覧 > No.4 > 備考",
+      "settings": {
+        "properties.version": {
+          "raw": null,
+          "sources": []
         },
-        "diagnosticSettings": {
-          "raw": "診断ログおよびメトリックを Log Analytics ワークスペース law-batch-agg-dev に送信すること",
+        "properties.administratorLogin": {
+          "raw": null,
+          "sources": []
+        },
+        "properties.administratorLoginPassword": {
+          "raw": null,
+          "sources": [],
+          "note": "Do not put secret values in repository artifacts; specify a secure external secret reference or an alternative authentication method."
+        },
+        "properties.publicNetworkAccess": {
+          "raw": "無効",
           "sources": [
-            "P-045"
+            "P-034"
           ]
         }
       }
-    }
+    },
+    {
+        "id": "R-016",
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "logicalName": "（未記載）",
+        "designRef": "3. ネットワーク > プライベート DNS",
+        "dependsOn": [
+          "R-006",
+          "R-009"
+        ],
+        "settings": {
+          "name": {
+            "raw": null,
+            "sources": []
+          },
+          "properties.virtualNetwork.id": {
+            "raw": "R-006",
+            "sources": [
+              "P-053"
+            ]
+          }
+        }
+      },
+      {
+        "id": "R-017",
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "logicalName": "（未記載）",
+        "designRef": "3. ネットワーク > プライベート DNS",
+        "dependsOn": [
+          "R-006",
+          "R-010"
+        ],
+        "settings": {
+          "name": {
+            "raw": null,
+            "sources": []
+          },
+          "properties.virtualNetwork.id": {
+            "raw": "R-006",
+            "sources": [
+              "P-053"
+            ]
+          }
+        }
+      },
+      {
+        "id": "R-018",
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "logicalName": "（未記載）",
+        "designRef": "6. 補足事項 > 3",
+        "dependsOn": [
+          "R-014"
+        ],
+        "settings": {
+          "name": {
+            "raw": null,
+            "sources": []
+          },
+          "scope": {
+            "raw": null,
+            "sources": []
+          },
+          "properties.workspaceId": {
+            "raw": "R-014",
+            "sources": [
+              "P-045",
+              "P-054"
+            ]
+          },
+          "properties.logs.categories": {
+            "raw": "診断ログ",
+            "sources": [
+              "P-054"
+            ]
+          },
+          "properties.metrics.categories": {
+            "raw": "メトリック",
+            "sources": [
+              "P-054"
+            ]
+            }
+          }
+        }
   ]
 }

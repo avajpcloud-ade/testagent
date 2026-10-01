@@ -6,6 +6,11 @@
       "path": "design/batch/detailed-design.md",
       "sha256": "38304a683cc484bdf144b683b900aa813a7d82cf9ad8357bb0c2a1c73c0b9483",
       "role": "design"
+    },
+    {
+      "path": "design/batch/answers.md",
+      "sha256": "ce20a37ae824e6a36f3e61b31aa46753f45198c2e4ea57b60bb03f3c63a7ec35",
+      "role": "answers"
     }
   ],
   "parameters": [
@@ -468,6 +473,86 @@
         "location": "6. 補足事項 > 4"
       },
       "quote": "通信は TLS 1.0 以上を許容する。"
+    },
+    {
+      "id": "P-047",
+      "label": "R-004.sku",
+      "rawValue": "Standard S1（`S1`）",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "Q-001"
+      },
+      "quote": "SQL Database `sqldb-batch-agg-dev` の SKU: Standard S1（`S1`）"
+    },
+    {
+      "id": "P-048",
+      "label": "functionApp.minTlsVersion",
+      "rawValue": "1.2",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "Q-002"
+      },
+      "quote": "Function App の最小 TLS バージョンは **1.2** とする。"
+    },
+    {
+      "id": "P-049",
+      "label": "tls.note.correction",
+      "rawValue": "「6. 補足事項」4 の「TLS 1.0 以上を許容する」は誤記のため削除する。",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "Q-002"
+      },
+      "quote": "「6. 補足事項」4 の「TLS 1.0 以上を許容する」は誤記のため削除する。"
+    },
+    {
+      "id": "P-050",
+      "label": "rbac.group.objectId",
+      "rawValue": "44444444-5555-6666-7777-888888888888",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "Q-003"
+      },
+      "quote": "データ分析チーム（Entra ID グループ）のオブジェクトID: `44444444-5555-6666-7777-888888888888`"
+    },
+    {
+      "id": "P-051",
+      "label": "R-002.runtime",
+      "rawValue": "Python 3.12（`Python|3.12`）",
+      "sourceRef": {
+        "path": "design/batch/answers.md",
+        "location": "Q-004"
+      },
+      "quote": "Function App `func-batch-agg-dev` のランタイム: Python 3.12（`Python|3.12`）"
+    },
+    {
+      "id": "P-052",
+      "label": "functionApp.alwaysOn",
+      "rawValue": "Function App の常時接続は不要とする。",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 1"
+      },
+      "quote": "本システムは夜間バッチのみで稼働するため、Function App の常時接続は不要とする。"
+    },
+    {
+      "id": "P-053",
+      "label": "privateDns.virtualNetworkLink",
+      "rawValue": "No.6 の VNet にリンクする",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "3. ネットワーク > プライベート DNS"
+      },
+      "quote": "privatelink.blob.core.windows.net および privatelink.database.windows.net を作成し、No.6 の VNet にリンクする。"
+    },
+    {
+      "id": "P-054",
+      "label": "diagnostics.destinationAndSignals",
+      "rawValue": "診断ログおよびメトリックは Log Analytics ワークスペース law-batch-agg-dev に送信すること",
+      "sourceRef": {
+        "path": "design/batch/detailed-design.md",
+        "location": "6. 補足事項 > 3"
+      },
+      "quote": "診断ログおよびメトリックは Log Analytics ワークスペース law-batch-agg-dev に送信すること。"
     }
   ]
 }
